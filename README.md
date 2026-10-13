@@ -127,6 +127,7 @@ checkpoints/       saved models (best-accuracy)
 outputs/           logs, metrics JSON, prediction PNGs
 ```
 
+
 ## 6. Results
 
 Full pipeline run on the DRIVE test set (20 images), 8-way self-ensemble, best
