@@ -1,0 +1,412 @@
+% =============================================================
+% Retinal Vessel Segmentation (DRIVE) -- Literature Review, M1
+% IEEE Conference Report -- 2 to 3 pages, no figures
+%
+% Compile: pdflatex literature_review.tex   (run twice)
+% =============================================================
+
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\usepackage[font=small,labelfont=bf,skip=4pt]{caption}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+% =============================================================
+\title{Deep Learning for Retinal Vessel Segmentation on DRIVE:\\
+A Focused Literature Review and Base-Paper Selection}
+
+\author{%
+\setlength{\tabcolsep}{3pt}%
+\begin{tabular}{@{}*{4}{>{\centering\arraybackslash}p{0.235\textwidth}}@{}}
+% NOTE: do NOT use \IEEEauthorblockN inside this tabular -- the macro
+% contains its own line break, which would end the row and stack the
+% names into column 1. Plain \normalsize matches its typography exactly.
+{\normalsize Tejmul Movin}                                             &
+{\normalsize Eranki Sai Vikas}                                         &
+{\normalsize Meenaksh Singhania}                                       &
+{\normalsize Akula Jitendranath}                                       \\[3pt]
+{\small\textit{Dept.\ of Computer Science}}                            &
+{\small\textit{Dept.\ of Computer Science}}                            &
+{\small\textit{Dept.\ of Computer Science}}                            &
+{\small\textit{Dept.\ of Computer Science}}                            \\
+{\small Newton School of Technology}                                   &
+{\small Newton School of Technology}                                   &
+{\small Newton School of Technology}                                   &
+{\small Newton School of Technology}                                   \\
+{\small Rishihood University}                                          &
+{\small Rishihood University}                                          &
+{\small Rishihood University}                                          &
+{\small Rishihood University}                                          \\
+{\small Sonipat, Haryana, India}                                       &
+{\small Sonipat, Haryana, India}                                       &
+{\small Sonipat, Haryana, India}                                       &
+{\small Sonipat, Haryana, India}                                       \\
+{\small sansar.t23csai@}                                               &
+{\small eranki.v23csai@}                                               &
+{\small meenaksh.s23csai@}                                             &
+{\small akula.j23csai@}                                                \\
+{\small nst.rishihood.edu.in}                                          &
+{\small nst.rishihood.edu.in}                                          &
+{\small nst.rishihood.edu.in}                                          &
+{\small nst.rishihood.edu.in}
+\end{tabular}
+}
+
+\maketitle
+
+% =============================================================
+\begin{abstract}
+This review studies ten papers published from 2021 to 2026 on marking blood
+vessel pixels in retinal fundus photographs. We compare their network designs,
+training schemes, metrics, model sizes and, most importantly for us, whether
+their code can actually be run. Reported $F_1$ scores sit between
+\textbf{82.06\%} and \textbf{86.44\%}, but those numbers cannot be lined up
+directly, because the papers mask, threshold and split their data differently.
+Three gaps stand out: four of the ten share no code, progress has slowed to
+about four points of $F_1$ in five years, and every method is trained pixel by
+pixel even though a vessel tree is only useful when it stays joined up. We
+select \textbf{SGL} (MICCAI 2021) as the base paper, because its repository
+already holds the DRIVE images, the labels and the trained weights, and because
+its loss can be swapped from the command line. After reproducing its baseline
+we will test one controlled change: replacing the pixel-wise loss with the
+centre-line clDice loss. No clinical claim is made in this work.
+\end{abstract}
+
+\begin{IEEEkeywords}
+retinal vessel segmentation, DRIVE, U-Net, reproducibility, topology-aware
+loss, medical image segmentation.
+\end{IEEEkeywords}
+
+% =============================================================
+\section{Scope and Review Method}
+
+The task is binary pixel classification. The input is one colour photograph of
+the retina, and the output is a mask that marks every pixel as vessel or
+background. Telling arteries apart from veins, finding lesions, grading disease
+severity, and any work on OCT volumes all sit outside this project.
+
+\subsection{Search and Selection}
+
+We searched using terms such as \textit{retinal vessel segmentation},
+\textit{DRIVE}, \textit{U-Net}, \textit{topology loss} and \textit{lightweight
+vessel segmentation}. From the results we kept ten papers, published in 2021 or
+later, that solve this exact task and report scores on the DRIVE test set.
+Papers evaluated only on other vessel datasets were dropped. One of them,
+Rolling-UNet (AAAI 2024), was removed at this stage because it tests on
+CHASE\_DB1 rather than DRIVE. This is a focused course review, not a formal
+systematic review.
+
+\subsection{Benchmark and Metrics}
+
+The benchmark is DRIVE, released by Staal \textit{et al.} in 2004. There are 40
+colour images in it, each $565 \times 584$ pixels, gathered during a Dutch
+screening drive for diabetic eye disease. The people who built the dataset also
+fixed the split for everyone: 20 images to train on and 20 to test on. Every
+image carries a field-of-view (FOV) mask, and every test image was marked by
+two people, of whom the first is treated as ground truth. Because the split is
+fixed, two groups reporting DRIVE scores are at least measuring the same
+images.
+
+Only about 8 to 10 per cent of pixels are vessel. A model that predicts pure
+background therefore scores above 0.90 accuracy while finding nothing, so
+accuracy is close to useless here. We compare $F_1$ (also called Dice),
+sensitivity, specificity, AUC and IoU, and we treat $F_1$ as the main score.
+
+% =============================================================
+\section{U-Net Variants and Training-Scheme Methods}
+
+Nearly all recent work starts from U-Net (Ronneberger \textit{et al.}, 2015)
+and changes one part of it. The first group changes the network so that thin
+vessels are not lost.
+
+FR-UNet~\cite{frunet} argues that the repeated shrinking inside U-Net throws
+away one-pixel vessels, and that enlarging the image later cannot bring them
+back. It therefore keeps a full-size path from start to finish and passes
+features between sizes. It then adds a two-threshold clean-up step: pixels with
+a high score are kept, and pixels with a middling score are kept only when they
+touch a pixel that was already kept. Its repository is one of only two in this
+review that ships trained weights. MDFI-Net~\cite{mdfinet} worries about the
+same loss, and answers it with deformable convolutions inside a pulse-coupled
+block, so weak vessels are still visible deeper down. Its reported accuracy
+runs from 97.91 to 98.16 per cent over three datasets. No code was released.
+
+The second group changes the training instead of the network.
+SGL~\cite{sgl} makes the point that the limit may be the labels. Many thin
+vessels in DRIVE were never marked by the annotator, so a model trained on them
+learns to miss the same vessels. SGL trains $k$ models on different parts of
+the data, combines them into cleaner labels, and trains again on those. It also
+supplies a tool that rubs out vessel labels on purpose, so robustness to bad
+labels can be measured instead of assumed. MRC-Net~\cite{mrcnet} blends
+features taken at several scales, lets information travel in both directions,
+and trains against a discriminator. The point of that last part is to reward
+the model for whole regions rather than for isolated pixels.
+
+% =============================================================
+\section{Topology, Attention, and Lightweight Models}
+
+A third group looks at the shape of the vessel itself. DSCNet~\cite{dscnet}
+lets the sampling points of a convolution curve along the vessel instead of
+sitting on a rigid square grid, and pairs this with a loss that charges the
+model directly for broken shapes. It reports 82.06 per cent Dice on DRIVE and
+has the most active repository in this review. This is the closest work to our
+own idea, but it changes the convolution and the loss at the same time, so the
+effect of each part cannot be separated.
+
+A fourth group widens the context the model can see.
+SA-UNetv2~\cite{saunetv2} builds on the authors' own earlier SA-UNet. It adds
+attention at each skip link, and it trains with a loss that pairs weighted
+cross-entropy with a correlation term. The result is 82.82 per cent $F_1$ from
+just 0.26 million weights, and about a second of work on a plain CPU.
+MM-UNet~\cite{mmunet} trades its pointwise convolutions for Mamba-style
+state-space layers, and gains 1.64 per cent $F_1$ on DRIVE.
+
+The last group cares about cost. LVS-Net~\cite{lvsnet} and
+LFRA-Net~\cite{lfranet} report Dice scores of 86.44 and 84.28 per cent using
+0.71 and 0.17 million parameters. Neuron programming~\cite{neuronprog} is the
+outlier of the group. It hunts for useful neuron types instead of a better
+layout, then trains a small helper network to guess good settings so the search
+stays affordable.
+
+% =============================================================
+\section{Main Findings and Research Gaps}
+
+The reported range of 82.06 to 86.44 per cent $F_1$ is not a fair ranking. Some
+papers score inside the FOV mask and some do not, thresholds are picked
+differently, and patch sizes vary, so a gap of one point can come from the
+protocol alone. A 2024 benchmarking study by Fadugba \textit{et al.} found that
+these models fall off sharply once they meet a dataset they were never tuned
+for, which hints that the published gaps are smaller than they look.
+
+Three gaps stand out. First, four of the ten papers release no code, so nobody
+can check their numbers. Second, scores have moved only about four points in
+five years while model sizes have fallen roughly ten times, so recent progress
+is mostly in efficiency rather than accuracy. Third, and most useful for us,
+every method above is trained with a loss that scores one pixel at a time, yet
+no paper reports a connectivity score. This matters because losing a single
+pixel in the middle of a thin branch barely changes Dice, while it cuts the
+branch in two and spoils any later measurement of branching or curviness.
+DSCNet~\cite{dscnet} is the only reviewed work that attacks this directly, and
+it does so together with a new convolution.
+
+We will study this gap without changing the network at all. That keeps the
+experiment small, clear, and possible on a free GPU.
+
+% =============================================================
+\section{Base Paper and Proposed Improvement}
+
+\subsection{Why SGL}
+
+We selected SGL~\cite{sgl} for reproduction; Table~\ref{tab:checklist} gives
+our check. Six of the ten papers share code, and we compared those six on how
+easily they run. SGL won for four reasons. Its repository already contains the
+DRIVE images, the labels, the generated pseudo-labels and the trained weights,
+so there is nothing to download and no folder to rearrange. A single command
+loads the published weights and prints the test scores, which tells us within
+minutes whether our setup is correct. It needs only ordinary PyTorch and NumPy,
+with one small fix expected because newer PyTorch changed the default of
+\texttt{torch.load}. And its loss is selected from the command line, with a
+loss folder that already holds cross-entropy, Dice and focal loss, so our
+change is one new file and one flag rather than surgery on the training loop.
+
+Our first choice had been FR-UNet~\cite{frunet}, which also ships weights and
+is the stronger paper on paper. We moved away from it after reading its code:
+it pins an old PyTorch, an old \texttt{timm} that imports a module deleted from
+current PyTorch, a Python-2 era helper package, and it calls a YAML function
+that no longer exists. That is four fixes before the first epoch, and none of
+them teach us anything about vessels. FR-UNet stays as our backup plan.
+
+\begin{table}[!t]
+  \caption{Reproducibility check for the selected base paper.}
+  \label{tab:checklist}
+  \centering
+  \renewcommand{\arraystretch}{1.18}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{} l p{5.4cm} @{}}
+    \toprule
+    \textbf{Check item} & \textbf{Team's check}                                   \\
+    \midrule
+    Dataset             & DRIVE, 40 images, already inside the repository         \\
+    Official code       & Yes; official PyTorch, MICCAI 2021                      \\
+    Protocol            & Fixed 20/20 split supplied by the dataset authors       \\
+    Free GPU            & Yes; 20 epochs, $256\times256$ patches, single GPU      \\
+    Metrics             & AUC, $F_1$, sensitivity, specificity                    \\
+    Weights             & Yes, \texttt{pretrained/drive\_k8.pth}                  \\
+    Expected            & Near the published score; exact match not guaranteed    \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Hypothesis}
+
+\textbf{Hypothesis:} replacing the pixel-wise loss with an equal mix of the
+centre-line clDice loss (Shit \textit{et al.}, CVPR 2021) and cross-entropy
+will raise sensitivity by 2 to 5 percentage points and $F_1$ by 0.5 to 1.5
+points, by punishing breaks in thin branches far more heavily than a slightly
+thick edge, while lowering specificity by no more than 1 point. The network,
+the data, the split, the pseudo-labels, the optimiser and the number of epochs
+will all stay fixed.
+
+\subsection{Experiment and Ablation Plan}
+
+The main experiment compares the reproduced baseline against the same model
+trained with the new loss. The ablation will test: (1)~the published weights,
+as a check on our setup; (2)~our retrained baseline with the original loss;
+(3)~the same model trained on the original DRIVE labels, without SGL's cleaned
+labels; and (4)~the cleaned labels together with the clDice loss. Row~(3)
+matters because SGL already repairs missing thin vessels by fixing the labels,
+so it is possible that little is left for our loss to win. If that is what we
+find, the ablation shows it clearly instead of leaving it as a guess.
+
+We will report $F_1$, sensitivity, specificity, AUC and IoU, and we will treat
+any $F_1$ change below 0.01 as noise unless it repeats across seeds, because
+the test set is only twenty images. Failure analysis will place the baseline
+and the new model side by side on the same images, count broken branches, and
+look at where errors gather: faint thin vessels, the bright optic disc, and
+crossings where two vessels meet.
+
+% =============================================================
+\section{Compact Comparison}
+
+Table~\ref{tab:comparison} places the ten reviewed studies side by side.
+
+\begin{table}[!t]
+  \caption{Comparison of the ten reviewed studies on DRIVE. Scores are as
+  reported by their own authors under differing protocols, so the table is a
+  guide and not a ranking.}
+  \label{tab:comparison}
+  \centering
+  \renewcommand{\arraystretch}{1.18}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{} l l p{2.5cm} r c @{}}
+    \toprule
+    \textbf{Study} & \textbf{Venue} & \textbf{Main method} &
+    \textbf{$F_1$} & \textbf{Code} \\
+    \midrule
+    SGL 2021~\cite{sgl}          & MICCAI       & Cleaned labels from a model group & --    & Yes \\
+    FR-UNet 2022~\cite{frunet}   & JBHI         & Full-size path, 2-threshold step   & 83$^{*}$ & Yes \\
+    DSCNet 2023~\cite{dscnet}    & ICCV         & Bending conv.\ plus shape loss     & 82.06 & Yes \\
+    MRC-Net 2023~\cite{mrcnet}   & Neural Netw. & Multi-scale, discriminator         & --    & No  \\
+    MDFI-Net 2024~\cite{mdfinet} & arXiv        & Deformable pulse-coupled block     & --    & No  \\
+    Neuron prog.\ 2024~\cite{neuronprog} & arXiv & Search over neuron types          & --    & No  \\
+    LVS-Net 2024~\cite{lvsnet}   & arXiv        & Light multi-scale encoder          & 86.44 & No  \\
+    LFRA-Net 2025~\cite{lfranet} & arXiv        & Focal and region attention         & 84.28 & Yes \\
+    MM-UNet 2025~\cite{mmunet}   & IEEE BIBM    & Mamba state-space layers           & $+1.64^{\dagger}$ & Yes \\
+    SA-UNetv2 2026~\cite{saunetv2} & IEEE ISBI  & Attention on all skips             & 82.82 & Yes \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{3pt}
+  {\footnotesize $^{*}$Sources disagree (82.88--83.16); the exact target must be
+  read from the paper's own table. $^{\dagger}$Reported as a gain over compared
+  methods, not an absolute score. ``--'' means the value was not extracted at
+  survey time.}
+\end{table}
+
+% =============================================================
+\section{Conclusion}
+
+The reviewed papers move from plain U-Net towards full-resolution designs,
+cleaner labels, shape-aware convolutions, attention and state-space layers, and
+very small models. Scores have largely flattened while model sizes have shrunk,
+so a fair and repeatable test now matters more than another point of $F_1$. We
+picked SGL as our base paper because everything needed to run it sits in one
+repository and because its loss can be swapped from the command line. We will
+first reproduce its baseline, then test one paper-backed change aimed at vessel
+connectivity. The fixed split, the ablation and the failure analysis together
+will show whether that change is worth keeping.
+
+% =============================================================
+\section*{Acknowledgment}
+The authors thank the open-source communities behind PyTorch and the public
+release of the DRIVE benchmark.
+
+% =============================================================
+\begin{thebibliography}{00}
+
+\bibitem{frunet}
+W.~Liu \textit{et al.},
+``Full-resolution network and dual-threshold iteration for retinal vessel and
+coronary angiograph segmentation,''
+\textit{IEEE J.\ Biomed.\ Health Inform.}, vol.~26, no.~9, pp.~4623--4634,
+2022, doi: 10.1109/JBHI.2022.3188710.
+
+\bibitem{mdfinet}
+Y.~Dong and X.~Deng,
+``MDFI-Net: Multiscale differential feature interaction network for accurate
+retinal vessel segmentation,''
+\textit{arXiv preprint arXiv:2410.15444}, 2024,
+doi: 10.48550/arXiv.2410.15444.
+
+\bibitem{sgl}
+Y.~Zhou, H.~Yu, and H.~Shi,
+``Study group learning: Improving retinal vessel segmentation trained with
+noisy labels,''
+in \textit{Proc.\ MICCAI}, LNCS vol.~12901, pp.~57--67, 2021,
+doi: 10.1007/978-3-030-87193-2\_6.
+
+\bibitem{mrcnet}
+T.~M.~Khan, S.~S.~Naqvi, A.~Robles-Kelly, and I.~Razzak,
+``Retinal vessel segmentation via a multi-resolution contextual network and
+adversarial learning,''
+\textit{Neural Networks}, vol.~165, pp.~310--320, 2023,
+doi: 10.1016/j.neunet.2023.05.029.
+
+\bibitem{dscnet}
+Y.~Qi, Y.~He, X.~Qi, Y.~Zhang, and G.~Yang,
+``Dynamic snake convolution based on topological geometric constraints for
+tubular structure segmentation,''
+in \textit{Proc.\ IEEE/CVF ICCV}, pp.~6047--6056, 2023,
+doi: 10.1109/ICCV51070.2023.00558.
+
+\bibitem{saunetv2}
+C.~Guo, A.~N.~Christensen, A.~B.~Dahl, Y.~Yi, and M.~R.~Hannemose,
+``SA-UNetv2: Rethinking spatial attention U-Net for retinal vessel
+segmentation,''
+in \textit{Proc.\ IEEE ISBI}, pp.~1--5, 2026,
+doi: 10.1109/ISBI61048.2026.11515447.
+
+\bibitem{mmunet}
+J.~Liu \textit{et al.},
+``MM-UNet: Morph Mamba U-shaped convolutional networks for retinal vessel
+segmentation,''
+in \textit{Proc.\ IEEE BIBM}, 2025, doi: 10.1109/BIBM66473.2025.11357047.
+
+\bibitem{lvsnet}
+M.~Mehmood, S.~Iqbal, T.~M.~Khan, I.~Spence, and M.~Fahim,
+``LVS-Net: A lightweight vessels segmentation network for retinal image
+analysis,''
+\textit{arXiv preprint arXiv:2412.05968}, 2024,
+doi: 10.48550/arXiv.2412.05968.
+
+\bibitem{lfranet}
+M.~Mehmood, S.~Iqbal, T.~M.~Khan, I.~Spence, and M.~Fahim,
+``LFRA-Net: A lightweight focal and region-aware attention network for retinal
+vessel segmentation,''
+\textit{arXiv preprint arXiv:2509.11811}, 2025,
+doi: 10.48550/arXiv.2509.11811.
+
+\bibitem{neuronprog}
+T.~Wu, R.~Min, P.~Song, H.~Guo, T.~Zeng, and F.-L.~Fan,
+``Retinal vessel segmentation via neuron programming,''
+\textit{arXiv preprint arXiv:2411.11110}, 2024,
+doi: 10.48550/arXiv.2411.11110.
+
+\end{thebibliography}
+
+\end{document}
