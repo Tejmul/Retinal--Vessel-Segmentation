@@ -7,3 +7,4 @@ scikit-learn
 scipy
 opencv-python-headless
 matplotlib
+flask

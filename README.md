@@ -244,12 +244,38 @@ disk is skipped, and `outputs/ablation.json` is rewritten after each row and
 read back on startup, so an interrupted run does not repeat finished work.
 Total ~2 h on an M2 (labelling ~25 min, then ~23 min per row).
 
-## 8. Results viewer
+## 8. Interfaces
 
-[web/index.html](web/index.html) is a self-contained page that compares the
-baseline and the proposed model on the DRIVE test images. The magnifier shows
-where they disagree pixel by pixel — green where clDice recovered a true vessel
-the baseline missed, red where it invented one — because the differences this
-experiment is about are invisible at full-image scale. Open it over HTTP
-(`python -m http.server` from `web/`), not as a `file://` URL, since it fetches
-its data.
+Two front ends, both in the repo.
+
+### `app/` — Vessel Studio (interactive, runs the models)
+
+```bash
+.venv/bin/python app/server.py      # http://127.0.0.1:5001
+```
+
+Pick any of the five checkpoints (the four ablation rows plus the paper's
+released weights), choose a DRIVE test image or drop in your own fundus
+photograph, and segment it. Views: overlay against the human tracing, binary
+mask, raw probability, **EnhanceNet's own output** (the first U-Net of the
+cascade, which is never supervised directly), and the plain fundus. A
+magnifier follows the cursor at 6x, because the differences this project is
+about are one or two pixels wide.
+
+The server returns the probability map rather than a binary mask, so the
+**threshold slider re-thresholds and re-scores in the browser with no further
+inference** — F1, sensitivity, specificity, accuracy and IoU update as you
+drag. That matters: the ablation fixes the threshold at `100/255`, which was
+chosen for a BCE-trained model, and a clDice-trained model puts its probability
+mass elsewhere. `Find best F1` sweeps it. A deep link such as
+`?img=03&model=A_sgl_baseline&thr=120` opens straight on one result.
+
+Inference is ~0.2 s per image on MPS, ~1.6 s with the 8-way self-ensemble.
+
+### `web/` — static results viewer
+
+[web/index.html](web/index.html) needs no server-side model: it ships
+precomputed masks for six test images and compares the baseline against the
+proposed model with the same magnifier, alongside the ablation tables and the
+scored hypothesis. Serve it over HTTP (`python -m http.server` from `web/`)
+rather than opening it as a `file://` URL, since it fetches its data.

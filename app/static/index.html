@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vessel Studio — SGL / clDice</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand">
+    <h1>Vessel Studio</h1>
+    <p>Retinal vessel segmentation — SGL reproduction with the clDice loss</p>
+  </div>
+  <div class="bar-meta">
+    <span class="chip" id="device">device —</span>
+    <span class="chip" id="timing">idle</span>
+  </div>
+</header>
+
+<main>
+  <!-- ------------------------------------------------ left: inputs -->
+  <aside class="panel side">
+    <section>
+      <h2>Model</h2>
+      <div class="radios" id="models"></div>
+    </section>
+
+    <section>
+      <h2>Input</h2>
+      <div class="thumbs" id="thumbs"></div>
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept="image/*" hidden>
+        <span><strong>Drop a fundus photo</strong>or click to choose</span>
+      </label>
+    </section>
+
+    <section>
+      <h2>Inference</h2>
+      <label class="check">
+        <input type="checkbox" id="se">
+        <span>8-way self-ensemble<small>Averages 8 flips/transposes. Matches the
+        paper's evaluation; about 8&times; slower.</small></span>
+      </label>
+      <button class="run" id="run">Segment</button>
+      <p class="err" id="err" hidden></p>
+    </section>
+  </aside>
+
+  <!-- ------------------------------------------------ centre: canvas -->
+  <section class="panel stage">
+    <div class="stage-head">
+      <div class="tabs" id="tabs">
+        <button class="tab" data-view="overlay" aria-pressed="true">Overlay</button>
+        <button class="tab" data-view="mask" aria-pressed="false">Mask</button>
+        <button class="tab" data-view="prob" aria-pressed="false">Probability</button>
+        <button class="tab" data-view="enhance" aria-pressed="false">Enhancement</button>
+        <button class="tab" data-view="fundus" aria-pressed="false">Fundus</button>
+      </div>
+      <p class="hint" id="hint">Hover the image to magnify 6&times;</p>
+    </div>
+
+    <div class="viewport" id="viewport">
+      <canvas id="cv"></canvas>
+      <div class="loupe" id="loupe"><canvas id="lcv"></canvas></div>
+      <div class="empty" id="empty">
+        <p>Pick a DRIVE test image or drop your own photograph, then press
+        <strong>Segment</strong>.</p>
+      </div>
+      <div class="busy" id="busy" hidden><span class="spin"></span>running the cascade…</div>
+    </div>
+
+    <p class="caption" id="caption">The enhancement view is EnhanceNet's own output — the
+    first of the two cascaded U-Nets. It is never supervised directly; it is what the network
+    learned to feed the segmentation stage.</p>
+  </section>
+
+  <!-- ------------------------------------------------ right: threshold + scores -->
+  <aside class="panel side">
+    <section>
+      <h2>Threshold</h2>
+      <div class="thr">
+        <input type="range" id="thr" min="1" max="254" value="100">
+        <output id="thrOut">100 / 255</output>
+      </div>
+      <p class="note">The ablation fixes this at <code>100/255</code>, chosen for a
+      BCE-trained model. Drag it: the mask and every score below update in the page,
+      with no new inference.</p>
+      <button class="ghost" id="best" disabled>Find best F₁</button>
+    </section>
+
+    <section>
+      <h2>Scores <span class="sub" id="scoreSrc">vs 1st_manual</span></h2>
+      <div class="scores" id="scores">
+        <p class="note">Scores appear once a DRIVE test image is segmented — an uploaded
+        photograph has no ground-truth tracing to compare against.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Legend</h2>
+      <div class="legend">
+        <div><i style="background:var(--hit)"></i><span>Vessel found<small>In both the
+          prediction and the label</small></span></div>
+        <div><i style="background:var(--miss)"></i><span>Vessel missed<small>In the label,
+          not predicted</small></span></div>
+        <div><i style="background:var(--fp)"></i><span>False positive<small>Predicted,
+          not in the label</small></span></div>
+      </div>
+    </section>
+  </aside>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
