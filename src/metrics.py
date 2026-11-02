@@ -7,6 +7,8 @@ prediction and the label, counting as true negatives -- this is the protocol
 used in the paper).
 """
 import numpy as np
+from skimage.measure import label as cc_label
+from skimage.morphology import skeletonize
 from sklearn.metrics import confusion_matrix, roc_auc_score
 
 ORIG_H, ORIG_W = 584, 565
@@ -27,6 +29,33 @@ def _acc_from_confusion(conf):
         denom = conf[i].sum() + conf[:, i].sum() - conf[i][i]
         iu.append(conf[i][i] / (denom + 1e-12))
     return acc, se, sp, iu
+
+
+def _cldice(pred_bin, gt):
+    """Binary centre-line Dice (Shit et al., CVPR 2021) -- the topology metric
+    matching the clDice training loss. Unlike Dice it is driven by whether the
+    two masks share a connected centre-line, not by how thick they are."""
+    if pred_bin.sum() == 0 or gt.sum() == 0:
+        return 0.0
+    skel_pred = skeletonize(pred_bin.astype(bool))
+    skel_gt = skeletonize(gt.astype(bool))
+    tprec = (skel_pred & gt.astype(bool)).sum() / (skel_pred.sum() + 1e-12)
+    tsens = (skel_gt & pred_bin.astype(bool)).sum() / (skel_gt.sum() + 1e-12)
+    if tprec + tsens == 0:
+        return 0.0
+    return float(2 * tprec * tsens / (tprec + tsens))
+
+
+def _connectivity(pred_bin, gt):
+    """Fragmentation of the predicted vessel tree.
+
+    The retinal vessel tree is (almost) one connected object, so a prediction
+    that breaks thin branches shows up as many extra connected components.
+    ``beta0_ratio`` > 1 means the prediction is more fragmented than the label.
+    """
+    n_pred = cc_label(pred_bin, connectivity=2).max()
+    n_gt = cc_label(gt, connectivity=2).max()
+    return int(n_pred), int(n_gt), float(n_pred / max(n_gt, 1))
 
 
 def evaluate_prediction(prob, vessel_gt, fov_mask):
@@ -51,10 +80,15 @@ def evaluate_prediction(prob, vessel_gt, fov_mask):
 
     inter = np.sum(pred_bin * gt)
     dice = 2.0 * inter / (pred_bin.sum() + gt.sum() + 1e-12)
+    cldice = _cldice(pred_bin, gt)
+    n_pred, n_gt, beta0 = _connectivity(pred_bin, gt)
     return {"acc": acc, "se": se, "sp": sp, "auc": auc,
-            "iou_bg": iu[0], "iou_vessel": iu[1], "dice": dice}
+            "iou_bg": iu[0], "iou_vessel": iu[1], "dice": dice,
+            "cldice": cldice, "beta0_ratio": beta0,
+            "n_cc_pred": n_pred, "n_cc_gt": n_gt}
 
 
 def mean_metrics(per_image):
-    keys = ["acc", "se", "sp", "auc", "iou_bg", "iou_vessel", "dice"]
+    keys = ["acc", "se", "sp", "auc", "iou_bg", "iou_vessel", "dice",
+            "cldice", "beta0_ratio", "n_cc_pred", "n_cc_gt"]
     return {k: float(np.nanmean([m[k] for m in per_image])) for k in keys}

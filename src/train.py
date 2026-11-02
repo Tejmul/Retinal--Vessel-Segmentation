@@ -12,7 +12,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from dataset import DriveDataset
-from losses import SGLoss
+from losses import build_loss
 from model import build_model
 from utils import get_device
 
@@ -20,11 +20,21 @@ from utils import get_device
 def train_model(root, train_indices=None, teacher_dir=None, *, epochs=20,
                 batch_size=4, patch_size=128, lr=1e-4, repeat=40,
                 device=None, out_ckpt=None, augment=True, elastic=True,
-                log_every=20, seed=0, eval_every=0, eval_self_ensemble=False):
+                log_every=20, seed=0, eval_every=0, eval_self_ensemble=False,
+                loss="sgl", select_metric="dice", out_last=None):
+    """Train one CON model.
+
+    ``loss`` selects the objective (see ``losses.build_loss``). ``out_ckpt``
+    keeps the best checkpoint by ``select_metric``; ``out_last`` additionally
+    saves the final epoch, which is the selection-free checkpoint used for the
+    ablation table (picking on the test set would flatter whichever loss
+    happens to suit the selection metric).
+    """
     torch.manual_seed(seed)
     device = device or get_device("auto")
     print(f"[train] device={device} epochs={epochs} bs={batch_size} "
-          f"patch={patch_size} lr={lr} teacher={'yes' if teacher_dir else 'no'} "
+          f"patch={patch_size} lr={lr} loss={loss} "
+          f"teacher={'yes' if teacher_dir else 'no'} "
           f"images={train_indices or 'all'}")
 
     ds = DriveDataset(root, split="training", indices=train_indices,
@@ -34,10 +44,10 @@ def train_model(root, train_indices=None, teacher_dir=None, *, epochs=20,
                         num_workers=0, drop_last=True)
 
     model = build_model().to(device)
-    criterion = SGLoss()
+    criterion = build_loss(loss)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.999))
 
-    best_acc = -1.0
+    best_score = -1.0
 
     def _save(path):
         os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
@@ -52,10 +62,10 @@ def train_model(root, train_indices=None, teacher_dir=None, *, epochs=20,
             te = batch["te"].to(device)
             optimizer.zero_grad()
             _, seg = model(hr)
-            loss = criterion(seg, ve, te)
-            loss.backward()
+            batch_loss = criterion(seg, ve, te)
+            batch_loss.backward()
             optimizer.step()
-            running += loss.item()
+            running += batch_loss.item()
             n += 1
             if (it + 1) % log_every == 0:
                 print(f"  epoch {epoch:3d} it {it+1:4d}/{len(loader)} "
@@ -68,17 +78,20 @@ def train_model(root, train_indices=None, teacher_dir=None, *, epochs=20,
             mean, _ = evaluate_model(model, root, device,
                                      self_ensemble=eval_self_ensemble)
             print(f"  [eval @ep{epoch}] acc={mean['acc']:.4f} auc={mean['auc']:.4f} "
-                  f"dice={mean['dice']:.4f} se={mean['se']:.4f} sp={mean['sp']:.4f}",
-                  flush=True)
-            if out_ckpt and mean["acc"] > best_acc:
-                best_acc = mean["acc"]
+                  f"dice={mean['dice']:.4f} cldice={mean['cldice']:.4f} "
+                  f"se={mean['se']:.4f} sp={mean['sp']:.4f}", flush=True)
+            if out_ckpt and mean[select_metric] > best_score:
+                best_score = mean[select_metric]
                 _save(out_ckpt)
-                print(f"  [eval] new best acc={best_acc:.4f} -> saved {out_ckpt}",
-                      flush=True)
+                print(f"  [eval] new best {select_metric}={best_score:.4f} "
+                      f"-> saved {out_ckpt}", flush=True)
 
-    if out_ckpt and best_acc < 0:  # no eval-based saving happened
+    if out_ckpt and best_score < 0:  # no eval-based saving happened
         _save(out_ckpt)
         print(f"[train] saved checkpoint -> {out_ckpt}")
+    if out_last:
+        _save(out_last)
+        print(f"[train] saved final-epoch checkpoint -> {out_last}")
     return model
 
 
@@ -94,12 +107,14 @@ def main():
     ap.add_argument("--device", default="auto")
     ap.add_argument("--out", default="checkpoints/con_model.pt")
     ap.add_argument("--no-elastic", action="store_true")
+    ap.add_argument("--loss", default="sgl",
+                    choices=["bce", "sgl", "cldice", "sgl_cldice"])
     args = ap.parse_args()
 
     train_model(args.root, teacher_dir=args.teacher_dir, epochs=args.epochs,
                 batch_size=args.batch_size, patch_size=args.patch_size,
                 lr=args.lr, repeat=args.repeat, device=get_device(args.device),
-                out_ckpt=args.out, elastic=not args.no_elastic)
+                out_ckpt=args.out, elastic=not args.no_elastic, loss=args.loss)
 
 
 if __name__ == "__main__":
