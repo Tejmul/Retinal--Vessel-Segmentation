@@ -56,9 +56,21 @@ def save_pseudo_label(model, root, idx, out_dir, device, self_ensemble=True):
     Image.fromarray(img).save(os.path.join(out_dir, f"{idx}_training_x1_teacher.png"))
 
 
+def _fold_done(out_dir, holdout):
+    return all(os.path.exists(os.path.join(out_dir, f"{i}_training_x1_teacher.png"))
+               for i in holdout)
+
+
 def generate_pseudo_labels(root, out_dir, *, k=5, epochs=20, batch_size=4,
                            patch_size=128, lr=1e-4, repeat=40, device=None,
-                           self_ensemble=True, ckpt_dir="checkpoints/folds"):
+                           self_ensemble=True, ckpt_dir="checkpoints/folds",
+                           resume=True):
+    """Train one model per study group and write the held-out pseudo-labels.
+
+    With ``resume`` (the default) a fold whose pseudo-labels are all present on
+    disk is skipped. Labelling is the expensive shared stage of the pipeline,
+    so an interrupted run should not pay for it twice.
+    """
     device = device or get_device("auto")
     ids = all_training_ids(root)
     folds = make_folds(ids, k)
@@ -68,6 +80,10 @@ def generate_pseudo_labels(root, out_dir, *, k=5, epochs=20, batch_size=4,
           + " | ".join("".join(f) if len(f) < 4 else f"{f[0]}..{f[-1]}" for f in folds))
 
     for fi, holdout in enumerate(folds):
+        if resume and _fold_done(out_dir, holdout):
+            print(f"\n[sgl] fold {fi+1}/{len(folds)}  holdout={holdout}  "
+                  f"-- already labelled, skipping")
+            continue
         train_ids = [i for i in ids if i not in set(holdout)]
         print(f"\n[sgl] fold {fi+1}/{len(folds)}  holdout={holdout}  "
               f"train on {len(train_ids)} images")

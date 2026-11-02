@@ -1,0 +1,602 @@
+<title>Vessel Loupe</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a full-bleed instrument viewer up top, then evidence in a reading column. */
+:root{
+  --bg:#f4f1ec; --panel:#fffdfa; --ink:#1b1a18; --ink-dim:#5d5951; --rule:#ddd6ca;
+  --amber:#a8541b;            /* the fundus itself */
+  --recovered:#1d7a4c;        /* clDice finds a true vessel */
+  --missed:#1f6f9a;           /* baseline only */
+  --false:#b4252a;            /* clDice invents one */
+  --shadow:0 1px 2px rgba(27,26,24,.06),0 8px 24px -12px rgba(27,26,24,.18);
+  --display:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#13120f; --panel:#1c1a16; --ink:#f0ece4; --ink-dim:#9d9789; --rule:#332f28;
+  --amber:#e0944f; --recovered:#45c585; --missed:#5bb6e0; --false:#f0656a;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#13120f; --panel:#1c1a16; --ink:#f0ece4; --ink-dim:#9d9789; --rule:#332f28;
+  --amber:#e0944f; --recovered:#45c585; --missed:#5bb6e0; --false:#f0656a;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+.col{max-width:68ch}
+h1,h2,h3{text-wrap:balance;margin:0}
+a{color:var(--amber)}
+
+/* ---------- masthead ---------- */
+header{padding-block:44px 28px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-dim);margin:0 0 14px}
+h1{font-family:var(--display);font-size:clamp(34px,6vw,58px);font-weight:400;line-height:1.02;
+  letter-spacing:-.015em}
+h1 em{font-style:italic;color:var(--amber)}
+.dek{margin:16px 0 0;font-size:clamp(15px,1.5vw,17px);color:var(--ink-dim);max-width:62ch}
+
+/* ---------- the instrument ---------- */
+.inst{padding-block:28px 8px}
+.inst-head{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:baseline;
+  justify-content:space-between;margin-bottom:14px}
+h2{font-family:var(--display);font-size:clamp(21px,2.6vw,27px);font-weight:500;letter-spacing:-.01em}
+.hint{font-family:var(--mono);font-size:11.5px;color:var(--ink-dim);letter-spacing:.02em}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 268px;gap:20px;align-items:start}
+@media (max-width:860px){.stage{grid-template-columns:minmax(0,1fr)}}
+
+.viewer{position:relative;border:1px solid var(--rule);border-radius:3px;overflow:hidden;
+  background:#000;box-shadow:var(--shadow);cursor:crosshair;touch-action:none;
+  aspect-ratio:565/584;max-width:100%}
+.viewer canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
+#loupe{position:absolute;width:184px;height:184px;border-radius:50%;pointer-events:none;
+  border:2px solid var(--panel);box-shadow:0 0 0 1px rgba(0,0,0,.55),0 12px 28px -8px rgba(0,0,0,.65);
+  opacity:0;transition:opacity .16s ease;background:#000;overflow:hidden;z-index:3}
+#loupe.on{opacity:1}
+#loupe canvas{width:100%;height:100%;image-rendering:pixelated}
+.xhair{position:absolute;inset:0;pointer-events:none;z-index:2}
+.wipe-grip{position:absolute;top:0;bottom:0;width:2px;background:var(--panel);z-index:1;
+  box-shadow:0 0 0 1px rgba(0,0,0,.45);pointer-events:none}
+.wipe-grip::after{content:"";position:absolute;top:50%;left:50%;width:30px;height:30px;
+  translate:-50% -50%;border-radius:50%;border:2px solid var(--panel);
+  background:rgba(0,0,0,.35)}
+.wipe-tag{position:absolute;top:8px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:#fff;background:rgba(0,0,0,.62);padding:3px 7px;border-radius:2px;
+  z-index:2;pointer-events:none}
+
+/* ---------- side rail ---------- */
+.rail{display:flex;flex-direction:column;gap:16px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:3px;padding:14px 15px;
+  box-shadow:var(--shadow)}
+.card h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-dim);font-weight:500;margin-bottom:11px}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.thumb{position:relative;border:1px solid var(--rule);border-radius:2px;overflow:hidden;padding:0;
+  background:#000;cursor:pointer;aspect-ratio:565/584}
+.thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.thumb span{position:absolute;left:3px;bottom:2px;font-family:var(--mono);font-size:9.5px;
+  color:#fff;text-shadow:0 1px 3px #000}
+.thumb[aria-pressed="true"]{outline:2px solid var(--amber);outline-offset:-2px}
+.thumb:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+
+.key{display:flex;flex-direction:column;gap:7px;font-size:12.5px}
+.key div{display:flex;gap:8px;align-items:flex-start;min-width:0}
+.sw{width:11px;height:11px;border-radius:2px;flex:none;margin-top:4px}
+.key b{font-weight:500}
+.key small{color:var(--ink-dim);display:block;font-size:11.5px;line-height:1.35}
+
+.readout{display:grid;grid-template-columns:auto 1fr 1fr;gap:5px 12px;font-family:var(--mono);
+  font-size:12px;font-variant-numeric:tabular-nums;align-items:baseline}
+.readout .h{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim)}
+.readout .lbl{color:var(--ink-dim);font-size:11px}
+.readout .d{color:var(--recovered)}
+.readout .d.neg{color:var(--false)}
+
+.toggles{display:flex;flex-wrap:wrap;gap:6px}
+.tg{font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding:5px 9px;border-radius:2px;
+  border:1px solid var(--rule);background:transparent;color:var(--ink-dim);cursor:pointer}
+.tg[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tg:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+
+/* ---------- prose + tables ---------- */
+section{padding-block:34px;border-top:1px solid var(--rule)}
+section.first{border-top:none}
+p{margin:0 0 14px}
+.lede{font-size:17px}
+.tbl-scroll{overflow-x:auto;margin:18px 0 8px;border:1px solid var(--rule);border-radius:3px;
+  background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+thead th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-dim);font-weight:500}
+tbody tr:last-child td{border-bottom:none}
+tr.prop{background:color-mix(in srgb,var(--amber) 9%,transparent)}
+tr.ref td{color:var(--ink-dim);font-style:italic}
+td.num{font-family:var(--mono)}
+td.best{font-weight:600;color:var(--amber)}
+caption{caption-side:bottom;text-align:left;padding:10px 12px;font-size:12px;color:var(--ink-dim);
+  border-top:1px solid var(--rule)}
+
+.verdict{display:grid;gap:10px;margin:18px 0}
+.vrow{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;
+  background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--false);
+  border-radius:3px;padding:11px 14px}
+.vrow.ok{border-left-color:var(--recovered)}
+.vrow .claim{font-size:13.5px;min-width:0}
+.vrow .obs{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+.pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  padding:3px 7px;border-radius:2px;background:var(--false);color:#fff;white-space:nowrap}
+.vrow.ok .pill{background:var(--recovered)}
+
+.callout{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--amber);
+  border-radius:3px;padding:16px 18px;margin:20px 0}
+.callout h3{font-family:var(--display);font-size:18px;font-weight:500;margin-bottom:8px}
+.callout p:last-child{margin-bottom:0}
+footer{padding-block:28px 40px;border-top:1px solid var(--rule);color:var(--ink-dim);font-size:12.5px}
+code{font-family:var(--mono);font-size:.9em;background:color-mix(in srgb,var(--ink) 7%,transparent);
+  padding:1px 4px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">DRIVE · 20 test images · ablation</p>
+  <h1>clDice buys connectivity<br>and <em>pays in precision</em></h1>
+  <p class="dek">We added the centre-line Dice loss to Study Group Learning to stop the
+  network breaking thin capillaries. It worked — 31% fewer broken branches, a third as
+  much fragmentation, on all 20 test images. It also cost 7.6 points of F<sub>1</sub>.
+  The hypothesis predicted the opposite.</p>
+</header>
+
+<div class="inst">
+  <div class="inst-head">
+    <h2>Where the two models disagree</h2>
+    <p class="hint" id="hint">Move the cursor over the retina to magnify 6&times;</p>
+  </div>
+  <div class="stage">
+    <div class="viewer" id="viewer">
+      <canvas id="base"></canvas>
+      <div class="wipe-grip" id="grip"></div>
+      <div class="wipe-tag" id="tagL">A · baseline</div>
+      <div class="wipe-tag" id="tagR">D · clDice</div>
+      <div id="loupe"><canvas id="lz"></canvas></div>
+    </div>
+    <div class="rail">
+      <div class="card">
+        <h3>Test image</h3>
+        <div class="thumbs" id="thumbs"></div>
+      </div>
+      <div class="card">
+        <h3>In the loupe</h3>
+        <div class="key">
+          <div><span class="sw" style="background:var(--recovered)"></span>
+            <span><b>clDice recovered it</b><small>True vessel the baseline missed</small></span></div>
+          <div><span class="sw" style="background:var(--missed)"></span>
+            <span><b>Baseline only</b><small>clDice lost a vessel the baseline had</small></span></div>
+          <div><span class="sw" style="background:var(--false)"></span>
+            <span><b>clDice false positive</b><small>Vessel that is not in the label</small></span></div>
+          <div><span class="sw" style="background:#9b9b9b"></span>
+            <span><b>Both agree</b><small>Label pixels found by each model</small></span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>This image</h3>
+        <div class="readout" id="readout"></div>
+      </div>
+      <div class="card">
+        <h3>Main view</h3>
+        <div class="toggles">
+          <button class="tg" id="tgWipe" aria-pressed="true">wipe A|D</button>
+          <button class="tg" id="tgDiff" aria-pressed="false">disagreement</button>
+          <button class="tg" id="tgLabel" aria-pressed="false">label</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="col">
+    <h2>The 2&times;2</h2>
+    <p class="lede">Four models, one change at a time: whether the study-group pseudo-labels
+    supervise training, and whether the pixel loss is mixed with clDice. Same network, split,
+    schedule, optimiser, augmentation and seed throughout.</p>
+  </div>
+  <div class="tbl-scroll">
+    <table id="ablation">
+      <caption>Final-epoch weights, 8-way self-ensemble, threshold 100/255. No checkpoint was
+      selected on the test set. &beta;<sub>0</sub> is predicted connected components per labelled
+      component — lower is a less fragmented vessel tree.</caption>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>The hypothesis, scored</h2>
+    <p>The literature review committed to three numbers before any training ran. Here they are
+    against row D minus row A.</p>
+  </div>
+  <div class="verdict" id="verdict"></div>
+  <div class="col">
+    <p>All three fail, and two fail in the direction the review did not consider: clDice made the
+    model <em>less</em> precise, not more sensitive-and-precise. On a 20-image test set the review
+    set a one-point F<sub>1</sub> noise floor; the 7.6-point drop clears it by a wide margin, and
+    it is the same sign on 20 of 20 images, so it is not sampling noise.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>What it actually bought</h2>
+    <p>Aggregate F<sub>1</sub> hides the mechanism. Splitting the label by vessel calibre — a pixel
+    within 1.5px of the background sits in a vessel about three pixels across — shows where each
+    model spends its errors.</p>
+  </div>
+  <div class="tbl-scroll">
+    <table id="failure">
+      <caption>Broken branches are connected runs of the label's skeleton that the prediction fails
+      to cover. Thin/thick sensitivity splits recall by the label's distance transform.</caption>
+    </table>
+  </div>
+  <div class="col">
+    <div class="callout">
+      <h3>The trade is legible</h3>
+      <p>clDice does what it promises. Broken branches fall from 141 to 97, fragmentation from 57
+      components to 20, and thin-vessel recall is the best of the four rows. Thick vessels were
+      never the problem — every row already finds them at 98%+.</p>
+      <p>The bill arrives as false positives: the rate nearly doubles, 0.043 to 0.079. A loss that
+      only rewards covering the label's centre-line has no reason to keep the prediction thin, so
+      the model thickens everything until the skeleton is covered. That is what costs the
+      F<sub>1</sub>, and it is visible in the loupe as red fringe along true vessels.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Reading it honestly</h2>
+    <p>Two findings here are worth more than the headline.</p>
+    <p><strong>SGL did not help under this budget.</strong> Row A against row B is −1.6 points of
+    F<sub>1</sub> and −0.7 of accuracy. The pseudo-labels bought +7.0 points of sensitivity and
+    +2.0 of clDice, so they shift the operating point rather than dominating. The review suspected
+    this and asked for the control row; the control earned its place.</p>
+    <p><strong>&alpha; = 0.5 is almost certainly too strong.</strong> clDice was given equal weight
+    with cross-entropy because the hypothesis said "an equal mix". The connectivity gain saturates
+    while the precision loss does not, so the interesting experiment is a sweep from 0.1 to 0.3 —
+    which this run does not cover and should not be read as covering.</p>
+    <p>One check on the reproduction: the paper's published <code>drive_k8</code> weights load into
+    this re-implementation with all 324 tensors matching, and score AUC 0.9886 / F<sub>1</sub>
+    0.8316 against the paper's reported ≈0.983 / ≈0.82. The architecture and evaluation protocol
+    are right; the retrained rows sit lower because they get 30 epochs at 128px rather than the
+    paper's longer schedule at 256px.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="col">
+    Reproduction of Zhou, Yu &amp; Shi, <em>Study Group Learning: Improving Retinal Vessel
+    Segmentation Trained with Noisy Labels</em> (MICCAI 2021), with the clDice loss of Shit
+    <em>et al.</em> (CVPR 2021). Trained on DRIVE on an M2 Mac, K=4 study groups, 30 epochs,
+    128px patches, seed 123. Single seed — differences below one point should not be trusted
+    without repeats.
+  </div>
+</footer>
+</div>
+
+<script>
+const W = 565, H = 584, ZOOM = 6, LOUPE = 184;
+const BASE = "A_sgl_baseline", PROP = "D_sgl_cldice";
+const $ = s => document.querySelector(s);
+const pct = v => (v * 100).toFixed(1);
+const f4 = v => v.toFixed(4);
+
+const base = $("#base"), lz = $("#lz");
+base.width = W; base.height = H;
+lz.width = lz.height = LOUPE;
+const bx = base.getContext("2d"), lx = lz.getContext("2d");
+bx.imageSmoothingEnabled = false; lx.imageSmoothingEnabled = false;
+
+let DATA = null, cur = null, wipe = 0.5, mode = "wipe", cache = new Map();
+
+/* ---- pixel helpers ------------------------------------------------------ */
+function loadImg(src){
+  return new Promise((res, rej) => {
+    const im = new Image();
+    im.onload = () => res(im); im.onerror = rej; im.src = src;
+  });
+}
+function maskBits(img){
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const g = c.getContext("2d");
+  g.drawImage(img, 0, 0, W, H);
+  const d = g.getImageData(0, 0, W, H).data;
+  const out = new Uint8Array(W * H);
+  for (let i = 0, p = 0; i < out.length; i++, p += 4) out[i] = d[p] > 127 ? 1 : 0;
+  return out;
+}
+function rgbaOf(img){
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const g = c.getContext("2d");
+  g.drawImage(img, 0, 0, W, H);
+  return g.getImageData(0, 0, W, H);
+}
+
+async function getSet(id){
+  if (cache.has(id)) return cache.get(id);
+  const rec = DATA.images[id];
+  const [f, gt, a, d] = await Promise.all([
+    loadImg("assets/" + rec.fundus), loadImg("assets/" + rec.gt),
+    loadImg("assets/" + rec[BASE]), loadImg("assets/" + rec[PROP]),
+  ]);
+  const set = { fundus: rgbaOf(f), fundusImg: f,
+                gt: maskBits(gt), a: maskBits(a), d: maskBits(d) };
+  cache.set(id, set);
+  return set;
+}
+
+/* ---- colour decision for one pixel ------------------------------------- */
+const C = {};
+function readTokens(){
+  const cs = getComputedStyle(document.documentElement);
+  const hex = n => {
+    const v = cs.getPropertyValue(n).trim();
+    const m = v.match(/^#([0-9a-f]{6})$/i);
+    if (!m) return [150,150,150];
+    const h = parseInt(m[1], 16);
+    return [(h >> 16) & 255, (h >> 8) & 255, h & 255];
+  };
+  C.rec = hex("--recovered"); C.mis = hex("--missed"); C.fal = hex("--false");
+  C.both = [155,155,155];
+}
+readTokens();
+
+/* ---- main view --------------------------------------------------------- */
+function drawMain(set){
+  bx.clearRect(0, 0, W, H);
+  bx.drawImage(set.fundusImg, 0, 0, W, H);
+  const img = bx.getImageData(0, 0, W, H);
+  const px = img.data;
+  const split = Math.round(wipe * W);
+  for (let y = 0, i = 0; y < H; y++){
+    for (let x = 0; x < W; x++, i++){
+      const a = set.a[i], d = set.d[i], g = set.gt[i];
+      let col = null;
+      if (mode === "label"){
+        if (g) col = [235, 235, 235];
+      } else if (mode === "diff"){
+        if (d && !a && g) col = C.rec;
+        else if (a && !d && g) col = C.mis;
+        else if (d && !a && !g) col = C.fal;
+        else if (d && a && g) col = C.both;
+      } else {                       /* wipe */
+        const on = x < split ? a : d;
+        if (on) col = x < split ? C.mis : C.rec;
+      }
+      if (col){
+        const p = i * 4;
+        px[p] = col[0]; px[p+1] = col[1]; px[p+2] = col[2]; px[p+3] = 255;
+      }
+    }
+  }
+  bx.putImageData(img, 0, 0);
+  if (mode === "wipe"){
+    bx.fillStyle = "rgba(255,255,255,.85)";
+    bx.fillRect(split - 1, 0, 2, H);
+  }
+}
+
+/* ---- loupe ------------------------------------------------------------- */
+function drawLoupe(set, cx, cy){
+  const src = Math.round(LOUPE / ZOOM);          /* source window in image px */
+  const half = Math.floor(src / 2);
+  const x0 = Math.max(0, Math.min(W - src, cx - half));
+  const y0 = Math.max(0, Math.min(H - src, cy - half));
+  const out = lx.createImageData(src, src);
+  const sp = set.fundus.data, op = out.data;
+  for (let y = 0; y < src; y++){
+    for (let x = 0; x < src; x++){
+      const si = ((y0 + y) * W + (x0 + x));
+      const sp4 = si * 4, op4 = (y * src + x) * 4;
+      let r = sp[sp4] * 0.55, g = sp[sp4+1] * 0.55, b = sp[sp4+2] * 0.55;
+      const A = set.a[si], D = set.d[si], G = set.gt[si];
+      let col = null;
+      if (D && !A && G) col = C.rec;
+      else if (A && !D && G) col = C.mis;
+      else if (D && !A && !G) col = C.fal;
+      else if (D && A && G) col = C.both;
+      else if (G && !A && !D) col = [90, 90, 90];   /* missed by both */
+      if (col){ r = col[0]; g = col[1]; b = col[2]; }
+      op[op4] = r; op[op4+1] = g; op[op4+2] = b; op[op4+3] = 255;
+    }
+  }
+  const tmp = document.createElement("canvas");
+  tmp.width = tmp.height = src;
+  tmp.getContext("2d").putImageData(out, 0, 0);
+  lx.imageSmoothingEnabled = false;
+  lx.clearRect(0, 0, LOUPE, LOUPE);
+  lx.drawImage(tmp, 0, 0, LOUPE, LOUPE);
+  /* crosshair */
+  lx.strokeStyle = "rgba(255,255,255,.5)"; lx.lineWidth = 1;
+  lx.beginPath();
+  lx.moveTo(LOUPE/2, LOUPE/2 - 9); lx.lineTo(LOUPE/2, LOUPE/2 + 9);
+  lx.moveTo(LOUPE/2 - 9, LOUPE/2); lx.lineTo(LOUPE/2 + 9, LOUPE/2);
+  lx.stroke();
+}
+
+/* ---- interaction ------------------------------------------------------- */
+const viewer = $("#viewer"), loupeEl = $("#loupe"), grip = $("#grip");
+let dragging = false;
+
+function imgCoords(ev){
+  const r = viewer.getBoundingClientRect();
+  const t = ev.touches ? ev.touches[0] : ev;
+  return {
+    x: Math.round((t.clientX - r.left) / r.width * W),
+    y: Math.round((t.clientY - r.top) / r.height * H),
+    rx: (t.clientX - r.left) / r.width, ry: (t.clientY - r.top) / r.height,
+    r,
+  };
+}
+function onMove(ev){
+  if (!cur) return;
+  const p = imgCoords(ev);
+  if (dragging && mode === "wipe"){
+    wipe = Math.max(0, Math.min(1, p.rx));
+    grip.style.left = (wipe * 100) + "%";
+    drawMain(cur);
+    placeTags();
+  }
+  loupeEl.classList.add("on");
+  const lx0 = p.rx * p.r.width - LOUPE / 2, ly0 = p.ry * p.r.height - LOUPE / 2;
+  loupeEl.style.left = lx0 + "px";
+  loupeEl.style.top = ly0 + "px";
+  drawLoupe(cur, p.x, p.y);
+  if (ev.cancelable) ev.preventDefault();
+}
+viewer.addEventListener("pointermove", onMove);
+viewer.addEventListener("pointerdown", e => { dragging = true; viewer.setPointerCapture(e.pointerId); onMove(e); });
+viewer.addEventListener("pointerup", e => { dragging = false; });
+viewer.addEventListener("pointerleave", () => { dragging = false; loupeEl.classList.remove("on"); });
+
+function placeTags(){
+  const show = mode === "wipe";
+  $("#tagL").hidden = !show; $("#tagR").hidden = !show; grip.hidden = !show;
+  if (show){
+    $("#tagL").style.left = "8px";
+    $("#tagR").style.right = "8px"; $("#tagR").style.left = "auto";
+  }
+}
+
+/* ---- tables ------------------------------------------------------------ */
+const ORDER = ["B_no_sgl", "C_cldice", "A_sgl_baseline", "D_sgl_cldice"];
+
+function buildAblation(){
+  const cols = [["Acc","acc"],["AUC","auc"],["Se","se"],["Sp","sp"],
+                ["F1","dice"],["clDice","cldice"],["IoU-v","iou"],["β₀","beta0"]];
+  const best = {};
+  cols.forEach(([,k]) => {
+    const vals = ORDER.map(r => DATA.rows[r][k]);
+    best[k] = k === "beta0" ? Math.min(...vals) : Math.max(...vals);
+  });
+  let h = "<thead><tr><th></th><th>configuration</th><th>SGL</th><th>clDice</th>"
+        + cols.map(c => `<th>${c[0]}</th>`).join("") + "</tr></thead><tbody>";
+  const o = DATA.official;
+  h += `<tr class="ref"><td>R</td><td>published weights, our code</td><td>K=8</td><td>—</td>`
+     + `<td class="num">${f4(o.acc)}</td><td class="num">${f4(o.auc)}</td>`
+     + `<td class="num">${f4(o.se)}</td><td class="num">${f4(o.sp)}</td>`
+     + `<td class="num">${f4(o.dice)}</td><td class="num">—</td>`
+     + `<td class="num">${f4(o.iou_vessel)}</td><td class="num">—</td></tr>`;
+  for (const r of ORDER){
+    const d = DATA.rows[r];
+    h += `<tr${r === PROP ? ' class="prop"' : ""}><td>${d.tag}</td><td>${d.desc}</td>`
+       + `<td>${d.sgl ? "yes" : "—"}</td><td>${d.cldice_on ? "yes" : "—"}</td>`
+       + cols.map(([, k]) => {
+           const v = d[k];
+           const txt = k === "beta0" ? v.toFixed(1) : f4(v);
+           return `<td class="num${v === best[k] ? " best" : ""}">${txt}</td>`;
+         }).join("") + "</tr>";
+  }
+  $("#ablation").innerHTML = h + "</tbody>"
+    + $("#ablation").querySelector("caption").outerHTML;
+}
+
+function buildFailure(){
+  const cols = [["Se thin","se_thin"],["Se thick","se_thick"],["Broken branches","breaks"],
+                ["Components","cc"],["False-pos rate","fpr"]];
+  let h = "<thead><tr><th></th><th>configuration</th>"
+        + cols.map(c => `<th>${c[0]}</th>`).join("") + "</tr></thead><tbody>";
+  for (const r of ORDER){
+    const d = DATA.rows[r];
+    h += `<tr${r === PROP ? ' class="prop"' : ""}><td>${d.tag}</td><td>${d.desc}</td>`
+       + `<td class="num">${f4(d.se_thin)}</td><td class="num">${f4(d.se_thick)}</td>`
+       + `<td class="num">${d.breaks.toFixed(0)}</td><td class="num">${d.cc.toFixed(0)}</td>`
+       + `<td class="num">${f4(d.fpr)}</td></tr>`;
+  }
+  $("#failure").innerHTML = h + "</tbody>"
+    + $("#failure").querySelector("caption").outerHTML;
+}
+
+function buildVerdict(){
+  const a = DATA.rows[BASE], d = DATA.rows[PROP];
+  const rows = [
+    ["Sensitivity rises by 2–5 points", (d.se - a.se) * 100, v => v >= 2 && v <= 5],
+    ["F₁ rises by 0.5–1.5 points", (d.dice - a.dice) * 100, v => v >= 0.5 && v <= 1.5],
+    ["Specificity falls by at most 1 point", (d.sp - a.sp) * 100, v => v >= -1],
+  ];
+  $("#verdict").innerHTML = rows.map(([claim, v, ok]) => {
+    const good = ok(v);
+    return `<div class="vrow${good ? " ok" : ""}"><div class="claim">${claim}</div>`
+         + `<div class="obs">${v >= 0 ? "+" : ""}${v.toFixed(2)} pp</div>`
+         + `<div class="pill">${good ? "holds" : "fails"}</div></div>`;
+  }).join("");
+}
+
+function buildReadout(id){
+  const a = DATA.perImage[BASE][id], d = DATA.perImage[PROP][id];
+  const row = (lbl, av, dv, fmt, lowerBetter) => {
+    const delta = dv - av;
+    const good = lowerBetter ? delta < 0 : delta > 0;
+    return `<div class="lbl">${lbl}</div><div>${fmt(av)}</div>`
+         + `<div class="d${good ? "" : " neg"}">${fmt(dv)}</div>`;
+  };
+  $("#readout").innerHTML =
+      `<div class="h"></div><div class="h">A base</div><div class="h">D clDice</div>`
+    + row("F₁", a.dice, d.dice, f4, false)
+    + row("clDice", a.cldice, d.cldice, f4, false)
+    + row("Se", a.se, d.se, f4, false)
+    + row("Se thin", a.se_thin, d.se_thin, f4, false)
+    + row("Breaks", a.breaks, d.breaks, v => v.toFixed(0), true)
+    + row("β₀", a.beta0, d.beta0, v => v.toFixed(1), true);
+}
+
+/* ---- boot -------------------------------------------------------------- */
+async function select(id){
+  cur = await getSet(id);
+  drawMain(cur);
+  buildReadout(id);
+  document.querySelectorAll(".thumb").forEach(b =>
+    b.setAttribute("aria-pressed", String(b.dataset.id === id)));
+}
+
+function setMode(m){
+  mode = m;
+  $("#tgWipe").setAttribute("aria-pressed", String(m === "wipe"));
+  $("#tgDiff").setAttribute("aria-pressed", String(m === "diff"));
+  $("#tgLabel").setAttribute("aria-pressed", String(m === "label"));
+  $("#hint").textContent = m === "wipe"
+    ? "Drag across the retina to wipe between the two models · hover to magnify 6×"
+    : "Move the cursor over the retina to magnify 6×";
+  placeTags();
+  if (cur) drawMain(cur);
+}
+$("#tgWipe").onclick = () => setMode("wipe");
+$("#tgDiff").onclick = () => setMode("diff");
+$("#tgLabel").onclick = () => setMode("label");
+
+(async function init(){
+  DATA = await (await fetch("assets/data.json")).json();
+  buildAblation(); buildFailure(); buildVerdict();
+  $("#thumbs").innerHTML = DATA.ids.map(id =>
+    `<button class="thumb" data-id="${id}" aria-pressed="false" title="DRIVE test image ${id}">
+       <img src="assets/${DATA.images[id].fundus}" alt="DRIVE test image ${id}">
+       <span>${id}</span></button>`).join("");
+  document.querySelectorAll(".thumb").forEach(b =>
+    b.onclick = () => select(b.dataset.id));
+  grip.style.left = "50%";
+  setMode("wipe");
+  await select(DATA.ids[0]);
+})();
+</script>

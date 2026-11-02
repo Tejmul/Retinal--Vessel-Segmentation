@@ -161,15 +161,16 @@ def main():
            r"\textbf{Acc} & \textbf{AUC} & \textbf{Se} & \textbf{$F_1$} & "
            r"\textbf{clDice} \\", r"    \midrule"]
     keys = ["acc", "auc", "se", "dice", "cldice"]
+    _tex_cell = lambda d, k: (f"{d[k]:.4f}" if d.get(k) is not None else "--")
     if official is not None:
         tex.append("    R & published weights & yes & no & "
-                   + " & ".join(f"{official[k]:.4f}" for k in keys) + r" \\")
+                   + " & ".join(_tex_cell(official, k) for k in keys) + r" \\")
     for name in present:
         tagd, desc, sgl, cld = LABELS[name]
         mean = rows[name][args.tag]["mean"]
         desc_tex = desc.replace("_", r"\_")
         tex.append(f"    {tagd} & {desc_tex} & {sgl} & {cld} & "
-                   + " & ".join(f"{mean[k]:.4f}" for k in keys) + r" \\")
+                   + " & ".join(_tex_cell(mean, k) for k in keys) + r" \\")
     tex += [r"    \bottomrule", r"  \end{tabular}", r"\end{table}"]
     open(args.out_tex, "w").write("\n".join(tex) + "\n")
     print(f"[comparison] wrote {args.out_md} and {args.out_tex}")

@@ -347,3 +347,1498 @@
   epoch  10 it   60/150 loss 0.9417
   epoch  10 it   80/150 loss 0.9372
   epoch  10 it  100/150 loss 0.9345
+=== Ablation on mps | seed=123 epochs=30 patch=128 ===
+[sgl] 20 images, 4 folds: 21..25 | 26..30 | 31..35 | 36..40
+
+[sgl] fold 1/4  holdout=['21', '22', '23', '24', '25']  -- already labelled, skipping
+
+[sgl] fold 2/4  holdout=['26', '27', '28', '29', '30']  -- already labelled, skipping
+
+[sgl] fold 3/4  holdout=['31', '32', '33', '34', '35']  -- already labelled, skipping
+
+[sgl] fold 4/4  holdout=['36', '37', '38', '39', '40']  train on 15 images
+[train] device=mps epochs=10 bs=4 patch=128 lr=0.0001 loss=sgl teacher=no images=['21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35']
+  epoch   1 it   20/150 loss 1.5774
+  epoch   1 it   40/150 loss 1.5697
+  epoch   1 it   60/150 loss 1.5581
+  epoch   1 it   80/150 loss 1.5501
+  epoch   1 it  100/150 loss 1.5415
+  epoch   1 it  120/150 loss 1.5339
+  epoch   1 it  140/150 loss 1.5275
+[epoch   1/10] mean_loss=1.5245 (35.9s)
+  epoch   2 it   20/150 loss 1.4642
+  epoch   2 it   40/150 loss 1.4645
+  epoch   2 it   60/150 loss 1.4644
+  epoch   2 it   80/150 loss 1.4602
+  epoch   2 it  100/150 loss 1.4538
+  epoch   2 it  120/150 loss 1.4478
+  epoch   2 it  140/150 loss 1.4433
+[epoch   2/10] mean_loss=1.4405 (34.9s)
+  epoch   3 it   20/150 loss 1.3810
+  epoch   3 it   40/150 loss 1.3916
+  epoch   3 it   60/150 loss 1.3915
+  epoch   3 it   80/150 loss 1.3895
+  epoch   3 it  100/150 loss 1.3859
+  epoch   3 it  120/150 loss 1.3786
+  epoch   3 it  140/150 loss 1.3740
+[epoch   3/10] mean_loss=1.3710 (34.0s)
+  epoch   4 it   20/150 loss 1.3286
+  epoch   4 it   40/150 loss 1.3207
+  epoch   4 it   60/150 loss 1.3166
+  epoch   4 it   80/150 loss 1.3114
+  epoch   4 it  100/150 loss 1.3099
+  epoch   4 it  120/150 loss 1.3086
+  epoch   4 it  140/150 loss 1.3031
+[epoch   4/10] mean_loss=1.3012 (34.2s)
+  epoch   5 it   20/150 loss 1.2495
+  epoch   5 it   40/150 loss 1.2454
+  epoch   5 it   60/150 loss 1.2478
+  epoch   5 it   80/150 loss 1.2458
+  epoch   5 it  100/150 loss 1.2428
+  epoch   5 it  120/150 loss 1.2410
+  epoch   5 it  140/150 loss 1.2386
+[epoch   5/10] mean_loss=1.2369 (35.2s)
+  epoch   6 it   20/150 loss 1.2067
+  epoch   6 it   40/150 loss 1.1963
+  epoch   6 it   60/150 loss 1.1912
+  epoch   6 it   80/150 loss 1.1888
+  epoch   6 it  100/150 loss 1.1782
+  epoch   6 it  120/150 loss 1.1737
+  epoch   6 it  140/150 loss 1.1661
+[epoch   6/10] mean_loss=1.1646 (33.7s)
+  epoch   7 it   20/150 loss 1.1232
+  epoch   7 it   40/150 loss 1.1145
+  epoch   7 it   60/150 loss 1.1185
+  epoch   7 it   80/150 loss 1.1140
+  epoch   7 it  100/150 loss 1.1105
+  epoch   7 it  120/150 loss 1.1063
+  epoch   7 it  140/150 loss 1.1034
+[epoch   7/10] mean_loss=1.1052 (33.9s)
+  epoch   8 it   20/150 loss 1.0677
+  epoch   8 it   40/150 loss 1.0674
+  epoch   8 it   60/150 loss 1.0619
+  epoch   8 it   80/150 loss 1.0572
+  epoch   8 it  100/150 loss 1.0493
+  epoch   8 it  120/150 loss 1.0498
+  epoch   8 it  140/150 loss 1.0454
+[epoch   8/10] mean_loss=1.0426 (33.5s)
+  epoch   9 it   20/150 loss 1.0026
+  epoch   9 it   40/150 loss 1.0085
+  epoch   9 it   60/150 loss 1.0035
+  epoch   9 it   80/150 loss 1.0042
+  epoch   9 it  100/150 loss 0.9984
+  epoch   9 it  120/150 loss 0.9950
+  epoch   9 it  140/150 loss 0.9906
+[epoch   9/10] mean_loss=0.9895 (32.8s)
+  epoch  10 it   20/150 loss 0.9246
+  epoch  10 it   40/150 loss 0.9350
+  epoch  10 it   60/150 loss 0.9325
+  epoch  10 it   80/150 loss 0.9289
+  epoch  10 it  100/150 loss 0.9284
+  epoch  10 it  120/150 loss 0.9258
+  epoch  10 it  140/150 loss 0.9227
+[epoch  10/10] mean_loss=0.9177 (33.7s)
+[train] saved checkpoint -> ../checkpoints/ablation/folds/fold4.pt
+  [sgl] pseudo-label saved: 36
+  [sgl] pseudo-label saved: 37
+  [sgl] pseudo-label saved: 38
+  [sgl] pseudo-label saved: 39
+  [sgl] pseudo-label saved: 40
+
+[sgl] all pseudo-labels written to ../data/DRIVE/training/teacher_sgl
+[ablation] labelling took 5.8 min
+
+=== B_no_sgl: no-SGL control (human labels, BCE)  [loss=bce] ===
+[train] device=mps epochs=30 bs=4 patch=128 lr=0.0001 loss=bce teacher=no images=all
+  epoch   1 it   20/200 loss 0.8260
+  epoch   1 it   40/200 loss 0.8028
+  epoch   1 it   60/200 loss 0.7879
+  epoch   1 it   80/200 loss 0.7750
+  epoch   1 it  100/200 loss 0.7652
+  epoch   1 it  120/200 loss 0.7555
+  epoch   1 it  140/200 loss 0.7491
+  epoch   1 it  160/200 loss 0.7424
+  epoch   1 it  180/200 loss 0.7379
+  epoch   1 it  200/200 loss 0.7320
+[epoch   1/30] mean_loss=0.7320 (44.9s)
+  epoch   2 it   20/200 loss 0.6900
+  epoch   2 it   40/200 loss 0.6785
+  epoch   2 it   60/200 loss 0.6783
+  epoch   2 it   80/200 loss 0.6761
+  epoch   2 it  100/200 loss 0.6708
+  epoch   2 it  120/200 loss 0.6686
+  epoch   2 it  140/200 loss 0.6663
+  epoch   2 it  160/200 loss 0.6634
+  epoch   2 it  180/200 loss 0.6606
+  epoch   2 it  200/200 loss 0.6577
+[epoch   2/30] mean_loss=0.6577 (45.9s)
+  epoch   3 it   20/200 loss 0.6389
+  epoch   3 it   40/200 loss 0.6320
+  epoch   3 it   60/200 loss 0.6284
+  epoch   3 it   80/200 loss 0.6272
+  epoch   3 it  100/200 loss 0.6232
+  epoch   3 it  120/200 loss 0.6225
+  epoch   3 it  140/200 loss 0.6195
+  epoch   3 it  160/200 loss 0.6172
+  epoch   3 it  180/200 loss 0.6144
+  epoch   3 it  200/200 loss 0.6114
+[epoch   3/30] mean_loss=0.6114 (44.4s)
+  epoch   4 it   20/200 loss 0.5926
+  epoch   4 it   40/200 loss 0.5858
+  epoch   4 it   60/200 loss 0.5828
+  epoch   4 it   80/200 loss 0.5781
+  epoch   4 it  100/200 loss 0.5759
+  epoch   4 it  120/200 loss 0.5754
+  epoch   4 it  140/200 loss 0.5740
+  epoch   4 it  160/200 loss 0.5740
+  epoch   4 it  180/200 loss 0.5702
+  epoch   4 it  200/200 loss 0.5689
+[epoch   4/30] mean_loss=0.5689 (44.6s)
+  epoch   5 it   20/200 loss 0.5575
+  epoch   5 it   40/200 loss 0.5548
+  epoch   5 it   60/200 loss 0.5471
+  epoch   5 it   80/200 loss 0.5435
+  epoch   5 it  100/200 loss 0.5414
+  epoch   5 it  120/200 loss 0.5392
+  epoch   5 it  140/200 loss 0.5353
+  epoch   5 it  160/200 loss 0.5339
+  epoch   5 it  180/200 loss 0.5305
+  epoch   5 it  200/200 loss 0.5287
+[epoch   5/30] mean_loss=0.5287 (44.3s)
+  [eval @ep5] acc=0.8873 auc=0.9771 dice=0.5996 cldice=0.6451 se=0.9539 sp=0.8810
+  [eval] new best dice=0.5996 -> saved ../checkpoints/ablation/B_no_sgl_best.pt
+  epoch   6 it   20/200 loss 0.5065
+  epoch   6 it   40/200 loss 0.5082
+  epoch   6 it   60/200 loss 0.4992
+  epoch   6 it   80/200 loss 0.4946
+  epoch   6 it  100/200 loss 0.4938
+  epoch   6 it  120/200 loss 0.4935
+  epoch   6 it  140/200 loss 0.4914
+  epoch   6 it  160/200 loss 0.4906
+  epoch   6 it  180/200 loss 0.4877
+  epoch   6 it  200/200 loss 0.4855
+[epoch   6/30] mean_loss=0.4855 (44.4s)
+  epoch   7 it   20/200 loss 0.4539
+  epoch   7 it   40/200 loss 0.4586
+  epoch   7 it   60/200 loss 0.4547
+  epoch   7 it   80/200 loss 0.4554
+  epoch   7 it  100/200 loss 0.4532
+  epoch   7 it  120/200 loss 0.4539
+  epoch   7 it  140/200 loss 0.4523
+  epoch   7 it  160/200 loss 0.4506
+  epoch   7 it  180/200 loss 0.4478
+  epoch   7 it  200/200 loss 0.4466
+[epoch   7/30] mean_loss=0.4466 (44.4s)
+  epoch   8 it   20/200 loss 0.4166
+  epoch   8 it   40/200 loss 0.4188
+  epoch   8 it   60/200 loss 0.4170
+  epoch   8 it   80/200 loss 0.4185
+  epoch   8 it  100/200 loss 0.4202
+  epoch   8 it  120/200 loss 0.4197
+  epoch   8 it  140/200 loss 0.4173
+  epoch   8 it  160/200 loss 0.4144
+  epoch   8 it  180/200 loss 0.4110
+  epoch   8 it  200/200 loss 0.4092
+[epoch   8/30] mean_loss=0.4092 (44.5s)
+  epoch   9 it   20/200 loss 0.3883
+  epoch   9 it   40/200 loss 0.3916
+  epoch   9 it   60/200 loss 0.3883
+  epoch   9 it   80/200 loss 0.3873
+  epoch   9 it  100/200 loss 0.3846
+  epoch   9 it  120/200 loss 0.3827
+  epoch   9 it  140/200 loss 0.3794
+  epoch   9 it  160/200 loss 0.3776
+  epoch   9 it  180/200 loss 0.3773
+  epoch   9 it  200/200 loss 0.3747
+[epoch   9/30] mean_loss=0.3747 (44.1s)
+  epoch  10 it   20/200 loss 0.3635
+  epoch  10 it   40/200 loss 0.3614
+  epoch  10 it   60/200 loss 0.3575
+  epoch  10 it   80/200 loss 0.3531
+  epoch  10 it  100/200 loss 0.3498
+  epoch  10 it  120/200 loss 0.3496
+  epoch  10 it  140/200 loss 0.3473
+  epoch  10 it  160/200 loss 0.3460
+  epoch  10 it  180/200 loss 0.3452
+  epoch  10 it  200/200 loss 0.3442
+[epoch  10/30] mean_loss=0.3442 (45.3s)
+  [eval @ep10] acc=0.9531 auc=0.9814 dice=0.7708 cldice=0.8352 se=0.9046 sp=0.9580
+  [eval] new best dice=0.7708 -> saved ../checkpoints/ablation/B_no_sgl_best.pt
+  epoch  11 it   20/200 loss 0.3264
+  epoch  11 it   40/200 loss 0.3297
+  epoch  11 it   60/200 loss 0.3241
+  epoch  11 it   80/200 loss 0.3235
+  epoch  11 it  100/200 loss 0.3227
+  epoch  11 it  120/200 loss 0.3205
+  epoch  11 it  140/200 loss 0.3193
+  epoch  11 it  160/200 loss 0.3177
+  epoch  11 it  180/200 loss 0.3158
+  epoch  11 it  200/200 loss 0.3160
+[epoch  11/30] mean_loss=0.3160 (47.3s)
+  epoch  12 it   20/200 loss 0.3139
+  epoch  12 it   40/200 loss 0.3116
+  epoch  12 it   60/200 loss 0.3153
+  epoch  12 it   80/200 loss 0.3105
+  epoch  12 it  100/200 loss 0.3100
+  epoch  12 it  120/200 loss 0.3051
+  epoch  12 it  140/200 loss 0.3022
+  epoch  12 it  160/200 loss 0.2991
+  epoch  12 it  180/200 loss 0.2979
+  epoch  12 it  200/200 loss 0.2968
+[epoch  12/30] mean_loss=0.2968 (47.6s)
+  epoch  13 it   20/200 loss 0.2709
+  epoch  13 it   40/200 loss 0.2774
+  epoch  13 it   60/200 loss 0.2841
+  epoch  13 it   80/200 loss 0.2798
+  epoch  13 it  100/200 loss 0.2787
+  epoch  13 it  120/200 loss 0.2807
+  epoch  13 it  140/200 loss 0.2787
+  epoch  13 it  160/200 loss 0.2788
+  epoch  13 it  180/200 loss 0.2772
+  epoch  13 it  200/200 loss 0.2751
+[epoch  13/30] mean_loss=0.2751 (45.7s)
+  epoch  14 it   20/200 loss 0.2614
+  epoch  14 it   40/200 loss 0.2596
+  epoch  14 it   60/200 loss 0.2605
+  epoch  14 it   80/200 loss 0.2627
+  epoch  14 it  100/200 loss 0.2622
+  epoch  14 it  120/200 loss 0.2583
+  epoch  14 it  140/200 loss 0.2592
+  epoch  14 it  160/200 loss 0.2576
+  epoch  14 it  180/200 loss 0.2566
+  epoch  14 it  200/200 loss 0.2555
+[epoch  14/30] mean_loss=0.2555 (43.4s)
+  epoch  15 it   20/200 loss 0.2343
+  epoch  15 it   40/200 loss 0.2374
+  epoch  15 it   60/200 loss 0.2389
+  epoch  15 it   80/200 loss 0.2388
+  epoch  15 it  100/200 loss 0.2395
+  epoch  15 it  120/200 loss 0.2370
+  epoch  15 it  140/200 loss 0.2376
+  epoch  15 it  160/200 loss 0.2388
+  epoch  15 it  180/200 loss 0.2367
+  epoch  15 it  200/200 loss 0.2361
+[epoch  15/30] mean_loss=0.2361 (44.8s)
+  [eval @ep15] acc=0.9662 auc=0.9807 dice=0.8118 cldice=0.8232 se=0.8381 sp=0.9788
+  [eval] new best dice=0.8118 -> saved ../checkpoints/ablation/B_no_sgl_best.pt
+  epoch  16 it   20/200 loss 0.2292
+  epoch  16 it   40/200 loss 0.2267
+  epoch  16 it   60/200 loss 0.2262
+  epoch  16 it   80/200 loss 0.2298
+  epoch  16 it  100/200 loss 0.2298
+  epoch  16 it  120/200 loss 0.2274
+  epoch  16 it  140/200 loss 0.2263
+  epoch  16 it  160/200 loss 0.2239
+  epoch  16 it  180/200 loss 0.2233
+  epoch  16 it  200/200 loss 0.2217
+[epoch  16/30] mean_loss=0.2217 (44.0s)
+  epoch  17 it   20/200 loss 0.2182
+  epoch  17 it   40/200 loss 0.2180
+  epoch  17 it   60/200 loss 0.2195
+  epoch  17 it   80/200 loss 0.2171
+  epoch  17 it  100/200 loss 0.2142
+  epoch  17 it  120/200 loss 0.2120
+  epoch  17 it  140/200 loss 0.2112
+  epoch  17 it  160/200 loss 0.2092
+  epoch  17 it  180/200 loss 0.2080
+  epoch  17 it  200/200 loss 0.2076
+[epoch  17/30] mean_loss=0.2076 (43.5s)
+  epoch  18 it   20/200 loss 0.2159
+  epoch  18 it   40/200 loss 0.2070
+  epoch  18 it   60/200 loss 0.2063
+  epoch  18 it   80/200 loss 0.2023
+  epoch  18 it  100/200 loss 0.1988
+  epoch  18 it  120/200 loss 0.1985
+  epoch  18 it  140/200 loss 0.1966
+  epoch  18 it  160/200 loss 0.1978
+  epoch  18 it  180/200 loss 0.1972
+  epoch  18 it  200/200 loss 0.1960
+[epoch  18/30] mean_loss=0.1960 (44.4s)
+  epoch  19 it   20/200 loss 0.1823
+  epoch  19 it   40/200 loss 0.1808
+  epoch  19 it   60/200 loss 0.1854
+  epoch  19 it   80/200 loss 0.1871
+  epoch  19 it  100/200 loss 0.1896
+  epoch  19 it  120/200 loss 0.1912
+  epoch  19 it  140/200 loss 0.1905
+  epoch  19 it  160/200 loss 0.1920
+  epoch  19 it  180/200 loss 0.1909
+  epoch  19 it  200/200 loss 0.1908
+[epoch  19/30] mean_loss=0.1908 (43.8s)
+  epoch  20 it   20/200 loss 0.1790
+  epoch  20 it   40/200 loss 0.1780
+  epoch  20 it   60/200 loss 0.1786
+  epoch  20 it   80/200 loss 0.1774
+  epoch  20 it  100/200 loss 0.1794
+  epoch  20 it  120/200 loss 0.1797
+  epoch  20 it  140/200 loss 0.1796
+  epoch  20 it  160/200 loss 0.1791
+  epoch  20 it  180/200 loss 0.1804
+  epoch  20 it  200/200 loss 0.1807
+[epoch  20/30] mean_loss=0.1807 (43.7s)
+  [eval @ep20] acc=0.9675 auc=0.9804 dice=0.8130 cldice=0.8186 se=0.8151 sp=0.9825
+  [eval] new best dice=0.8130 -> saved ../checkpoints/ablation/B_no_sgl_best.pt
+  epoch  21 it   20/200 loss 0.1780
+  epoch  21 it   40/200 loss 0.1781
+  epoch  21 it   60/200 loss 0.1744
+  epoch  21 it   80/200 loss 0.1730
+  epoch  21 it  100/200 loss 0.1718
+  epoch  21 it  120/200 loss 0.1719
+  epoch  21 it  140/200 loss 0.1716
+  epoch  21 it  160/200 loss 0.1706
+  epoch  21 it  180/200 loss 0.1698
+  epoch  21 it  200/200 loss 0.1696
+[epoch  21/30] mean_loss=0.1696 (43.8s)
+  epoch  22 it   20/200 loss 0.1743
+  epoch  22 it   40/200 loss 0.1710
+  epoch  22 it   60/200 loss 0.1723
+  epoch  22 it   80/200 loss 0.1706
+  epoch  22 it  100/200 loss 0.1702
+  epoch  22 it  120/200 loss 0.1694
+  epoch  22 it  140/200 loss 0.1678
+  epoch  22 it  160/200 loss 0.1667
+  epoch  22 it  180/200 loss 0.1665
+  epoch  22 it  200/200 loss 0.1660
+[epoch  22/30] mean_loss=0.1660 (43.8s)
+  epoch  23 it   20/200 loss 0.1591
+  epoch  23 it   40/200 loss 0.1604
+  epoch  23 it   60/200 loss 0.1591
+  epoch  23 it   80/200 loss 0.1591
+  epoch  23 it  100/200 loss 0.1583
+  epoch  23 it  120/200 loss 0.1587
+  epoch  23 it  140/200 loss 0.1591
+  epoch  23 it  160/200 loss 0.1581
+  epoch  23 it  180/200 loss 0.1590
+  epoch  23 it  200/200 loss 0.1585
+[epoch  23/30] mean_loss=0.1585 (43.5s)
+  epoch  24 it   20/200 loss 0.1595
+  epoch  24 it   40/200 loss 0.1580
+  epoch  24 it   60/200 loss 0.1566
+  epoch  24 it   80/200 loss 0.1573
+  epoch  24 it  100/200 loss 0.1567
+  epoch  24 it  120/200 loss 0.1551
+  epoch  24 it  140/200 loss 0.1551
+  epoch  24 it  160/200 loss 0.1542
+  epoch  24 it  180/200 loss 0.1533
+  epoch  24 it  200/200 loss 0.1525
+[epoch  24/30] mean_loss=0.1525 (44.1s)
+  epoch  25 it   20/200 loss 0.1475
+  epoch  25 it   40/200 loss 0.1514
+  epoch  25 it   60/200 loss 0.1514
+  epoch  25 it   80/200 loss 0.1498
+  epoch  25 it  100/200 loss 0.1488
+  epoch  25 it  120/200 loss 0.1486
+  epoch  25 it  140/200 loss 0.1484
+  epoch  25 it  160/200 loss 0.1487
+  epoch  25 it  180/200 loss 0.1484
+  epoch  25 it  200/200 loss 0.1490
+[epoch  25/30] mean_loss=0.1490 (43.9s)
+  [eval @ep25] acc=0.9679 auc=0.9850 dice=0.8145 cldice=0.8223 se=0.8136 sp=0.9829
+  [eval] new best dice=0.8145 -> saved ../checkpoints/ablation/B_no_sgl_best.pt
+  epoch  26 it   20/200 loss 0.1504
+  epoch  26 it   40/200 loss 0.1469
+  epoch  26 it   60/200 loss 0.1467
+  epoch  26 it   80/200 loss 0.1449
+  epoch  26 it  100/200 loss 0.1437
+  epoch  26 it  120/200 loss 0.1431
+  epoch  26 it  140/200 loss 0.1437
+  epoch  26 it  160/200 loss 0.1442
+  epoch  26 it  180/200 loss 0.1439
+  epoch  26 it  200/200 loss 0.1438
+[epoch  26/30] mean_loss=0.1438 (43.5s)
+  epoch  27 it   20/200 loss 0.1438
+  epoch  27 it   40/200 loss 0.1425
+  epoch  27 it   60/200 loss 0.1418
+  epoch  27 it   80/200 loss 0.1406
+  epoch  27 it  100/200 loss 0.1418
+  epoch  27 it  120/200 loss 0.1431
+  epoch  27 it  140/200 loss 0.1434
+  epoch  27 it  160/200 loss 0.1440
+  epoch  27 it  180/200 loss 0.1443
+  epoch  27 it  200/200 loss 0.1435
+[epoch  27/30] mean_loss=0.1435 (43.7s)
+  epoch  28 it   20/200 loss 0.1331
+  epoch  28 it   40/200 loss 0.1365
+  epoch  28 it   60/200 loss 0.1357
+  epoch  28 it   80/200 loss 0.1358
+  epoch  28 it  100/200 loss 0.1368
+  epoch  28 it  120/200 loss 0.1378
+  epoch  28 it  140/200 loss 0.1378
+  epoch  28 it  160/200 loss 0.1388
+  epoch  28 it  180/200 loss 0.1382
+  epoch  28 it  200/200 loss 0.1390
+[epoch  28/30] mean_loss=0.1390 (43.6s)
+  epoch  29 it   20/200 loss 0.1416
+  epoch  29 it   40/200 loss 0.1367
+  epoch  29 it   60/200 loss 0.1381
+  epoch  29 it   80/200 loss 0.1380
+  epoch  29 it  100/200 loss 0.1373
+  epoch  29 it  120/200 loss 0.1361
+  epoch  29 it  140/200 loss 0.1364
+  epoch  29 it  160/200 loss 0.1366
+  epoch  29 it  180/200 loss 0.1366
+  epoch  29 it  200/200 loss 0.1366
+[epoch  29/30] mean_loss=0.1366 (43.7s)
+  epoch  30 it   20/200 loss 0.1328
+  epoch  30 it   40/200 loss 0.1305
+  epoch  30 it   60/200 loss 0.1290
+  epoch  30 it   80/200 loss 0.1334
+  epoch  30 it  100/200 loss 0.1340
+  epoch  30 it  120/200 loss 0.1337
+  epoch  30 it  140/200 loss 0.1334
+  epoch  30 it  160/200 loss 0.1334
+  epoch  30 it  180/200 loss 0.1331
+  epoch  30 it  200/200 loss 0.1327
+[epoch  30/30] mean_loss=0.1327 (43.3s)
+  [eval @ep30] acc=0.9690 auc=0.9859 dice=0.8168 cldice=0.8094 se=0.7977 sp=0.9857
+  [eval] new best dice=0.8168 -> saved ../checkpoints/ablation/B_no_sgl_best.pt
+[train] saved final-epoch checkpoint -> ../checkpoints/ablation/B_no_sgl_last.pt
+  [B_no_sgl/last] acc=0.9695 auc=0.9872 dice=0.8200 cldice=0.8118 se=0.8012 sp=0.9860 beta0=32.59
+  [B_no_sgl/best_dice] acc=0.9695 auc=0.9872 dice=0.8200 cldice=0.8118 se=0.8012 sp=0.9860 beta0=32.59
+[ablation] B_no_sgl done in 22.7 min -> ../outputs/ablation.json
+
+=== C_cldice: clDice without SGL  [loss=cldice] ===
+[train] device=mps epochs=30 bs=4 patch=128 lr=0.0001 loss=cldice teacher=no images=all
+  epoch   1 it   20/200 loss 0.8079
+  epoch   1 it   40/200 loss 0.8089
+  epoch   1 it   60/200 loss 0.7755
+  epoch   1 it   80/200 loss 0.7399
+  epoch   1 it  100/200 loss 0.7068
+  epoch   1 it  120/200 loss 0.6812
+  epoch   1 it  140/200 loss 0.6593
+  epoch   1 it  160/200 loss 0.6406
+  epoch   1 it  180/200 loss 0.6244
+  epoch   1 it  200/200 loss 0.6112
+[epoch   1/30] mean_loss=0.6112 (44.1s)
+  epoch   2 it   20/200 loss 0.4598
+  epoch   2 it   40/200 loss 0.4607
+  epoch   2 it   60/200 loss 0.4622
+  epoch   2 it   80/200 loss 0.4599
+  epoch   2 it  100/200 loss 0.4547
+  epoch   2 it  120/200 loss 0.4515
+  epoch   2 it  140/200 loss 0.4501
+  epoch   2 it  160/200 loss 0.4496
+  epoch   2 it  180/200 loss 0.4474
+  epoch   2 it  200/200 loss 0.4447
+[epoch   2/30] mean_loss=0.4447 (43.6s)
+  epoch   3 it   20/200 loss 0.4341
+  epoch   3 it   40/200 loss 0.4282
+  epoch   3 it   60/200 loss 0.4266
+  epoch   3 it   80/200 loss 0.4211
+  epoch   3 it  100/200 loss 0.4213
+  epoch   3 it  120/200 loss 0.4189
+  epoch   3 it  140/200 loss 0.4177
+  epoch   3 it  160/200 loss 0.4159
+  epoch   3 it  180/200 loss 0.4145
+  epoch   3 it  200/200 loss 0.4135
+[epoch   3/30] mean_loss=0.4135 (43.6s)
+  epoch   4 it   20/200 loss 0.3824
+  epoch   4 it   40/200 loss 0.3867
+  epoch   4 it   60/200 loss 0.3949
+  epoch   4 it   80/200 loss 0.3961
+  epoch   4 it  100/200 loss 0.3945
+  epoch   4 it  120/200 loss 0.3933
+  epoch   4 it  140/200 loss 0.3902
+  epoch   4 it  160/200 loss 0.3889
+  epoch   4 it  180/200 loss 0.3886
+  epoch   4 it  200/200 loss 0.3879
+[epoch   4/30] mean_loss=0.3879 (43.7s)
+  epoch   5 it   20/200 loss 0.3758
+  epoch   5 it   40/200 loss 0.3783
+  epoch   5 it   60/200 loss 0.3759
+  epoch   5 it   80/200 loss 0.3792
+  epoch   5 it  100/200 loss 0.3784
+  epoch   5 it  120/200 loss 0.3767
+  epoch   5 it  140/200 loss 0.3733
+  epoch   5 it  160/200 loss 0.3709
+  epoch   5 it  180/200 loss 0.3685
+  epoch   5 it  200/200 loss 0.3672
+[epoch   5/30] mean_loss=0.3672 (43.6s)
+  [eval @ep5] acc=0.8039 auc=0.9643 dice=0.4603 cldice=0.7549 se=0.9483 sp=0.7902
+  [eval] new best dice=0.4603 -> saved ../checkpoints/ablation/C_cldice_best.pt
+  epoch   6 it   20/200 loss 0.3395
+  epoch   6 it   40/200 loss 0.3437
+  epoch   6 it   60/200 loss 0.3476
+  epoch   6 it   80/200 loss 0.3447
+  epoch   6 it  100/200 loss 0.3459
+  epoch   6 it  120/200 loss 0.3450
+  epoch   6 it  140/200 loss 0.3448
+  epoch   6 it  160/200 loss 0.3450
+  epoch   6 it  180/200 loss 0.3447
+  epoch   6 it  200/200 loss 0.3447
+[epoch   6/30] mean_loss=0.3447 (44.3s)
+  epoch   7 it   20/200 loss 0.3457
+  epoch   7 it   40/200 loss 0.3422
+  epoch   7 it   60/200 loss 0.3397
+  epoch   7 it   80/200 loss 0.3389
+  epoch   7 it  100/200 loss 0.3377
+  epoch   7 it  120/200 loss 0.3362
+  epoch   7 it  140/200 loss 0.3351
+  epoch   7 it  160/200 loss 0.3342
+  epoch   7 it  180/200 loss 0.3346
+  epoch   7 it  200/200 loss 0.3332
+[epoch   7/30] mean_loss=0.3332 (43.7s)
+  epoch   8 it   20/200 loss 0.3230
+  epoch   8 it   40/200 loss 0.3188
+  epoch   8 it   60/200 loss 0.3187
+  epoch   8 it   80/200 loss 0.3186
+  epoch   8 it  100/200 loss 0.3173
+  epoch   8 it  120/200 loss 0.3167
+  epoch   8 it  140/200 loss 0.3154
+  epoch   8 it  160/200 loss 0.3150
+  epoch   8 it  180/200 loss 0.3148
+  epoch   8 it  200/200 loss 0.3153
+[epoch   8/30] mean_loss=0.3153 (43.7s)
+  epoch   9 it   20/200 loss 0.2966
+  epoch   9 it   40/200 loss 0.2970
+  epoch   9 it   60/200 loss 0.2951
+  epoch   9 it   80/200 loss 0.2953
+  epoch   9 it  100/200 loss 0.2981
+  epoch   9 it  120/200 loss 0.2990
+  epoch   9 it  140/200 loss 0.2993
+  epoch   9 it  160/200 loss 0.2992
+  epoch   9 it  180/200 loss 0.3010
+  epoch   9 it  200/200 loss 0.3002
+[epoch   9/30] mean_loss=0.3002 (43.8s)
+  epoch  10 it   20/200 loss 0.2797
+  epoch  10 it   40/200 loss 0.2807
+  epoch  10 it   60/200 loss 0.2850
+  epoch  10 it   80/200 loss 0.2873
+  epoch  10 it  100/200 loss 0.2846
+  epoch  10 it  120/200 loss 0.2844
+  epoch  10 it  140/200 loss 0.2852
+  epoch  10 it  160/200 loss 0.2853
+  epoch  10 it  180/200 loss 0.2854
+  epoch  10 it  200/200 loss 0.2842
+[epoch  10/30] mean_loss=0.2842 (43.8s)
+  [eval @ep10] acc=0.9167 auc=0.9668 dice=0.6529 cldice=0.8393 se=0.8971 sp=0.9188
+  [eval] new best dice=0.6529 -> saved ../checkpoints/ablation/C_cldice_best.pt
+  epoch  11 it   20/200 loss 0.2818
+  epoch  11 it   40/200 loss 0.2817
+  epoch  11 it   60/200 loss 0.2826
+  epoch  11 it   80/200 loss 0.2801
+  epoch  11 it  100/200 loss 0.2785
+  epoch  11 it  120/200 loss 0.2767
+  epoch  11 it  140/200 loss 0.2744
+  epoch  11 it  160/200 loss 0.2740
+  epoch  11 it  180/200 loss 0.2737
+  epoch  11 it  200/200 loss 0.2726
+[epoch  11/30] mean_loss=0.2726 (43.9s)
+  epoch  12 it   20/200 loss 0.2640
+  epoch  12 it   40/200 loss 0.2734
+  epoch  12 it   60/200 loss 0.2752
+  epoch  12 it   80/200 loss 0.2739
+  epoch  12 it  100/200 loss 0.2696
+  epoch  12 it  120/200 loss 0.2693
+  epoch  12 it  140/200 loss 0.2682
+  epoch  12 it  160/200 loss 0.2677
+  epoch  12 it  180/200 loss 0.2682
+  epoch  12 it  200/200 loss 0.2676
+[epoch  12/30] mean_loss=0.2676 (43.6s)
+  epoch  13 it   20/200 loss 0.2567
+  epoch  13 it   40/200 loss 0.2555
+  epoch  13 it   60/200 loss 0.2528
+  epoch  13 it   80/200 loss 0.2539
+  epoch  13 it  100/200 loss 0.2530
+  epoch  13 it  120/200 loss 0.2563
+  epoch  13 it  140/200 loss 0.2572
+  epoch  13 it  160/200 loss 0.2574
+  epoch  13 it  180/200 loss 0.2566
+  epoch  13 it  200/200 loss 0.2554
+[epoch  13/30] mean_loss=0.2554 (44.0s)
+  epoch  14 it   20/200 loss 0.2537
+  epoch  14 it   40/200 loss 0.2495
+  epoch  14 it   60/200 loss 0.2517
+  epoch  14 it   80/200 loss 0.2539
+  epoch  14 it  100/200 loss 0.2520
+  epoch  14 it  120/200 loss 0.2510
+  epoch  14 it  140/200 loss 0.2487
+  epoch  14 it  160/200 loss 0.2475
+  epoch  14 it  180/200 loss 0.2447
+  epoch  14 it  200/200 loss 0.2455
+[epoch  14/30] mean_loss=0.2455 (44.3s)
+  epoch  15 it   20/200 loss 0.2440
+  epoch  15 it   40/200 loss 0.2412
+  epoch  15 it   60/200 loss 0.2397
+  epoch  15 it   80/200 loss 0.2413
+  epoch  15 it  100/200 loss 0.2418
+  epoch  15 it  120/200 loss 0.2409
+  epoch  15 it  140/200 loss 0.2386
+  epoch  15 it  160/200 loss 0.2374
+  epoch  15 it  180/200 loss 0.2360
+  epoch  15 it  200/200 loss 0.2353
+[epoch  15/30] mean_loss=0.2353 (44.4s)
+  [eval @ep15] acc=0.9414 auc=0.9727 dice=0.7229 cldice=0.8539 se=0.8774 sp=0.9478
+  [eval] new best dice=0.7229 -> saved ../checkpoints/ablation/C_cldice_best.pt
+  epoch  16 it   20/200 loss 0.2306
+  epoch  16 it   40/200 loss 0.2320
+  epoch  16 it   60/200 loss 0.2278
+  epoch  16 it   80/200 loss 0.2315
+  epoch  16 it  100/200 loss 0.2301
+  epoch  16 it  120/200 loss 0.2312
+  epoch  16 it  140/200 loss 0.2296
+  epoch  16 it  160/200 loss 0.2278
+  epoch  16 it  180/200 loss 0.2286
+  epoch  16 it  200/200 loss 0.2285
+[epoch  16/30] mean_loss=0.2285 (44.0s)
+  epoch  17 it   20/200 loss 0.2182
+  epoch  17 it   40/200 loss 0.2198
+  epoch  17 it   60/200 loss 0.2219
+  epoch  17 it   80/200 loss 0.2210
+  epoch  17 it  100/200 loss 0.2194
+  epoch  17 it  120/200 loss 0.2219
+  epoch  17 it  140/200 loss 0.2237
+  epoch  17 it  160/200 loss 0.2207
+  epoch  17 it  180/200 loss 0.2209
+  epoch  17 it  200/200 loss 0.2219
+[epoch  17/30] mean_loss=0.2219 (44.7s)
+  epoch  18 it   20/200 loss 0.2197
+  epoch  18 it   40/200 loss 0.2162
+  epoch  18 it   60/200 loss 0.2157
+  epoch  18 it   80/200 loss 0.2138
+  epoch  18 it  100/200 loss 0.2127
+  epoch  18 it  120/200 loss 0.2146
+  epoch  18 it  140/200 loss 0.2126
+  epoch  18 it  160/200 loss 0.2130
+  epoch  18 it  180/200 loss 0.2140
+  epoch  18 it  200/200 loss 0.2146
+[epoch  18/30] mean_loss=0.2146 (44.1s)
+  epoch  19 it   20/200 loss 0.2131
+  epoch  19 it   40/200 loss 0.2142
+  epoch  19 it   60/200 loss 0.2146
+  epoch  19 it   80/200 loss 0.2133
+  epoch  19 it  100/200 loss 0.2119
+  epoch  19 it  120/200 loss 0.2123
+  epoch  19 it  140/200 loss 0.2108
+  epoch  19 it  160/200 loss 0.2109
+  epoch  19 it  180/200 loss 0.2116
+  epoch  19 it  200/200 loss 0.2111
+[epoch  19/30] mean_loss=0.2111 (44.4s)
+  epoch  20 it   20/200 loss 0.1988
+  epoch  20 it   40/200 loss 0.1998
+  epoch  20 it   60/200 loss 0.2064
+  epoch  20 it   80/200 loss 0.2037
+  epoch  20 it  100/200 loss 0.2050
+  epoch  20 it  120/200 loss 0.2050
+  epoch  20 it  140/200 loss 0.2043
+  epoch  20 it  160/200 loss 0.2046
+  epoch  20 it  180/200 loss 0.2040
+  epoch  20 it  200/200 loss 0.2050
+[epoch  20/30] mean_loss=0.2050 (44.4s)
+  [eval @ep20] acc=0.9503 auc=0.9671 dice=0.7473 cldice=0.8515 se=0.8451 sp=0.9606
+  [eval] new best dice=0.7473 -> saved ../checkpoints/ablation/C_cldice_best.pt
+  epoch  21 it   20/200 loss 0.2121
+  epoch  21 it   40/200 loss 0.2094
+  epoch  21 it   60/200 loss 0.2100
+  epoch  21 it   80/200 loss 0.2095
+  epoch  21 it  100/200 loss 0.2099
+  epoch  21 it  120/200 loss 0.2088
+  epoch  21 it  140/200 loss 0.2091
+  epoch  21 it  160/200 loss 0.2064
+  epoch  21 it  180/200 loss 0.2057
+  epoch  21 it  200/200 loss 0.2068
+[epoch  21/30] mean_loss=0.2068 (45.1s)
+  epoch  22 it   20/200 loss 0.2039
+  epoch  22 it   40/200 loss 0.2036
+  epoch  22 it   60/200 loss 0.2023
+  epoch  22 it   80/200 loss 0.2021
+  epoch  22 it  100/200 loss 0.2023
+  epoch  22 it  120/200 loss 0.2003
+  epoch  22 it  140/200 loss 0.1988
+  epoch  22 it  160/200 loss 0.1985
+  epoch  22 it  180/200 loss 0.1987
+  epoch  22 it  200/200 loss 0.1982
+[epoch  22/30] mean_loss=0.1982 (44.4s)
+  epoch  23 it   20/200 loss 0.1914
+  epoch  23 it   40/200 loss 0.1916
+  epoch  23 it   60/200 loss 0.1896
+  epoch  23 it   80/200 loss 0.1923
+  epoch  23 it  100/200 loss 0.1923
+  epoch  23 it  120/200 loss 0.1942
+  epoch  23 it  140/200 loss 0.1950
+  epoch  23 it  160/200 loss 0.1943
+  epoch  23 it  180/200 loss 0.1949
+  epoch  23 it  200/200 loss 0.1938
+[epoch  23/30] mean_loss=0.1938 (43.7s)
+  epoch  24 it   20/200 loss 0.1909
+  epoch  24 it   40/200 loss 0.1947
+  epoch  24 it   60/200 loss 0.1931
+  epoch  24 it   80/200 loss 0.1927
+  epoch  24 it  100/200 loss 0.1907
+  epoch  24 it  120/200 loss 0.1901
+  epoch  24 it  140/200 loss 0.1891
+  epoch  24 it  160/200 loss 0.1887
+  epoch  24 it  180/200 loss 0.1895
+  epoch  24 it  200/200 loss 0.1887
+[epoch  24/30] mean_loss=0.1887 (44.1s)
+  epoch  25 it   20/200 loss 0.1923
+  epoch  25 it   40/200 loss 0.1977
+  epoch  25 it   60/200 loss 0.1976
+  epoch  25 it   80/200 loss 0.1960
+  epoch  25 it  100/200 loss 0.1944
+  epoch  25 it  120/200 loss 0.1949
+  epoch  25 it  140/200 loss 0.1937
+  epoch  25 it  160/200 loss 0.1932
+  epoch  25 it  180/200 loss 0.1919
+  epoch  25 it  200/200 loss 0.1921
+[epoch  25/30] mean_loss=0.1921 (43.8s)
+  [eval @ep25] acc=0.9525 auc=0.9719 dice=0.7598 cldice=0.8587 se=0.8624 sp=0.9614
+  [eval] new best dice=0.7598 -> saved ../checkpoints/ablation/C_cldice_best.pt
+  epoch  26 it   20/200 loss 0.1916
+  epoch  26 it   40/200 loss 0.1933
+  epoch  26 it   60/200 loss 0.1934
+  epoch  26 it   80/200 loss 0.1907
+  epoch  26 it  100/200 loss 0.1884
+  epoch  26 it  120/200 loss 0.1847
+  epoch  26 it  140/200 loss 0.1854
+  epoch  26 it  160/200 loss 0.1856
+  epoch  26 it  180/200 loss 0.1859
+  epoch  26 it  200/200 loss 0.1859
+[epoch  26/30] mean_loss=0.1859 (44.4s)
+  epoch  27 it   20/200 loss 0.1846
+  epoch  27 it   40/200 loss 0.1871
+  epoch  27 it   60/200 loss 0.1851
+  epoch  27 it   80/200 loss 0.1873
+  epoch  27 it  100/200 loss 0.1888
+  epoch  27 it  120/200 loss 0.1879
+  epoch  27 it  140/200 loss 0.1859
+  epoch  27 it  160/200 loss 0.1856
+  epoch  27 it  180/200 loss 0.1849
+  epoch  27 it  200/200 loss 0.1836
+[epoch  27/30] mean_loss=0.1836 (44.5s)
+  epoch  28 it   20/200 loss 0.1739
+  epoch  28 it   40/200 loss 0.1796
+  epoch  28 it   60/200 loss 0.1779
+  epoch  28 it   80/200 loss 0.1786
+  epoch  28 it  100/200 loss 0.1782
+  epoch  28 it  120/200 loss 0.1783
+  epoch  28 it  140/200 loss 0.1807
+  epoch  28 it  160/200 loss 0.1815
+  epoch  28 it  180/200 loss 0.1799
+  epoch  28 it  200/200 loss 0.1805
+[epoch  28/30] mean_loss=0.1805 (48.2s)
+  epoch  29 it   20/200 loss 0.1729
+  epoch  29 it   40/200 loss 0.1752
+  epoch  29 it   60/200 loss 0.1769
+  epoch  29 it   80/200 loss 0.1797
+  epoch  29 it  100/200 loss 0.1796
+  epoch  29 it  120/200 loss 0.1787
+  epoch  29 it  140/200 loss 0.1788
+  epoch  29 it  160/200 loss 0.1793
+  epoch  29 it  180/200 loss 0.1781
+  epoch  29 it  200/200 loss 0.1775
+[epoch  29/30] mean_loss=0.1775 (48.1s)
+  epoch  30 it   20/200 loss 0.1750
+  epoch  30 it   40/200 loss 0.1747
+  epoch  30 it   60/200 loss 0.1739
+  epoch  30 it   80/200 loss 0.1766
+  epoch  30 it  100/200 loss 0.1766
+  epoch  30 it  120/200 loss 0.1771
+  epoch  30 it  140/200 loss 0.1774
+  epoch  30 it  160/200 loss 0.1779
+  epoch  30 it  180/200 loss 0.1763
+  epoch  30 it  200/200 loss 0.1775
+[epoch  30/30] mean_loss=0.1775 (47.1s)
+  [eval @ep30] acc=0.9586 auc=0.9793 dice=0.7840 cldice=0.8559 se=0.8620 sp=0.9681
+  [eval] new best dice=0.7840 -> saved ../checkpoints/ablation/C_cldice_best.pt
+[train] saved final-epoch checkpoint -> ../checkpoints/ablation/C_cldice_last.pt
+  [C_cldice/last] acc=0.9599 auc=0.9818 dice=0.7904 cldice=0.8595 se=0.8677 sp=0.9690 beta0=8.15
+  [C_cldice/best_dice] acc=0.9599 auc=0.9818 dice=0.7904 cldice=0.8595 se=0.8677 sp=0.9690 beta0=8.15
+[ablation] C_cldice done in 22.8 min -> ../outputs/ablation.json
+
+=== A_sgl_baseline: SGL baseline (reproduced paper)  [loss=sgl] ===
+[train] device=mps epochs=30 bs=4 patch=128 lr=0.0001 loss=sgl teacher=yes images=all
+  epoch   1 it   20/200 loss 1.5674
+  epoch   1 it   40/200 loss 1.5338
+  epoch   1 it   60/200 loss 1.5029
+  epoch   1 it   80/200 loss 1.4842
+  epoch   1 it  100/200 loss 1.4681
+  epoch   1 it  120/200 loss 1.4538
+  epoch   1 it  140/200 loss 1.4422
+  epoch   1 it  160/200 loss 1.4331
+  epoch   1 it  180/200 loss 1.4246
+  epoch   1 it  200/200 loss 1.4184
+[epoch   1/30] mean_loss=1.4184 (44.9s)
+  epoch   2 it   20/200 loss 1.3329
+  epoch   2 it   40/200 loss 1.3247
+  epoch   2 it   60/200 loss 1.3300
+  epoch   2 it   80/200 loss 1.3244
+  epoch   2 it  100/200 loss 1.3194
+  epoch   2 it  120/200 loss 1.3183
+  epoch   2 it  140/200 loss 1.3173
+  epoch   2 it  160/200 loss 1.3117
+  epoch   2 it  180/200 loss 1.3111
+  epoch   2 it  200/200 loss 1.3078
+[epoch   2/30] mean_loss=1.3078 (46.9s)
+  epoch   3 it   20/200 loss 1.2587
+  epoch   3 it   40/200 loss 1.2737
+  epoch   3 it   60/200 loss 1.2651
+  epoch   3 it   80/200 loss 1.2655
+  epoch   3 it  100/200 loss 1.2627
+  epoch   3 it  120/200 loss 1.2598
+  epoch   3 it  140/200 loss 1.2582
+  epoch   3 it  160/200 loss 1.2553
+  epoch   3 it  180/200 loss 1.2537
+  epoch   3 it  200/200 loss 1.2493
+[epoch   3/30] mean_loss=1.2493 (46.6s)
+  epoch   4 it   20/200 loss 1.1994
+  epoch   4 it   40/200 loss 1.2034
+  epoch   4 it   60/200 loss 1.2033
+  epoch   4 it   80/200 loss 1.2003
+  epoch   4 it  100/200 loss 1.2013
+  epoch   4 it  120/200 loss 1.2001
+  epoch   4 it  140/200 loss 1.1965
+  epoch   4 it  160/200 loss 1.1930
+  epoch   4 it  180/200 loss 1.1904
+  epoch   4 it  200/200 loss 1.1883
+[epoch   4/30] mean_loss=1.1883 (45.1s)
+  epoch   5 it   20/200 loss 1.1712
+  epoch   5 it   40/200 loss 1.1740
+  epoch   5 it   60/200 loss 1.1694
+  epoch   5 it   80/200 loss 1.1640
+  epoch   5 it  100/200 loss 1.1608
+  epoch   5 it  120/200 loss 1.1576
+  epoch   5 it  140/200 loss 1.1549
+  epoch   5 it  160/200 loss 1.1518
+  epoch   5 it  180/200 loss 1.1489
+  epoch   5 it  200/200 loss 1.1444
+[epoch   5/30] mean_loss=1.1444 (45.6s)
+  [eval @ep5] acc=0.8783 auc=0.9773 dice=0.5837 cldice=0.5997 se=0.9566 sp=0.8709
+  [eval] new best dice=0.5837 -> saved ../checkpoints/ablation/A_sgl_baseline_best.pt
+  epoch   6 it   20/200 loss 1.1080
+  epoch   6 it   40/200 loss 1.1092
+  epoch   6 it   60/200 loss 1.1150
+  epoch   6 it   80/200 loss 1.1076
+  epoch   6 it  100/200 loss 1.1096
+  epoch   6 it  120/200 loss 1.1074
+  epoch   6 it  140/200 loss 1.1035
+  epoch   6 it  160/200 loss 1.1004
+  epoch   6 it  180/200 loss 1.1001
+  epoch   6 it  200/200 loss 1.0999
+[epoch   6/30] mean_loss=1.0999 (45.3s)
+  epoch   7 it   20/200 loss 1.0667
+  epoch   7 it   40/200 loss 1.0889
+  epoch   7 it   60/200 loss 1.0798
+  epoch   7 it   80/200 loss 1.0806
+  epoch   7 it  100/200 loss 1.0752
+  epoch   7 it  120/200 loss 1.0691
+  epoch   7 it  140/200 loss 1.0638
+  epoch   7 it  160/200 loss 1.0618
+  epoch   7 it  180/200 loss 1.0599
+  epoch   7 it  200/200 loss 1.0597
+[epoch   7/30] mean_loss=1.0597 (45.8s)
+  epoch   8 it   20/200 loss 1.0214
+  epoch   8 it   40/200 loss 1.0204
+  epoch   8 it   60/200 loss 1.0230
+  epoch   8 it   80/200 loss 1.0224
+  epoch   8 it  100/200 loss 1.0248
+  epoch   8 it  120/200 loss 1.0243
+  epoch   8 it  140/200 loss 1.0242
+  epoch   8 it  160/200 loss 1.0224
+  epoch   8 it  180/200 loss 1.0205
+  epoch   8 it  200/200 loss 1.0190
+[epoch   8/30] mean_loss=1.0190 (46.5s)
+  epoch   9 it   20/200 loss 0.9987
+  epoch   9 it   40/200 loss 0.9976
+  epoch   9 it   60/200 loss 0.9928
+  epoch   9 it   80/200 loss 0.9969
+  epoch   9 it  100/200 loss 1.0007
+  epoch   9 it  120/200 loss 1.0009
+  epoch   9 it  140/200 loss 0.9982
+  epoch   9 it  160/200 loss 0.9957
+  epoch   9 it  180/200 loss 0.9958
+  epoch   9 it  200/200 loss 0.9945
+[epoch   9/30] mean_loss=0.9945 (45.7s)
+  epoch  10 it   20/200 loss 0.9716
+  epoch  10 it   40/200 loss 0.9781
+  epoch  10 it   60/200 loss 0.9815
+  epoch  10 it   80/200 loss 0.9769
+  epoch  10 it  100/200 loss 0.9773
+  epoch  10 it  120/200 loss 0.9784
+  epoch  10 it  140/200 loss 0.9766
+  epoch  10 it  160/200 loss 0.9757
+  epoch  10 it  180/200 loss 0.9728
+  epoch  10 it  200/200 loss 0.9710
+[epoch  10/30] mean_loss=0.9710 (44.2s)
+  [eval @ep10] acc=0.9485 auc=0.9804 dice=0.7564 cldice=0.8210 se=0.9141 sp=0.9520
+  [eval] new best dice=0.7564 -> saved ../checkpoints/ablation/A_sgl_baseline_best.pt
+  epoch  11 it   20/200 loss 0.9597
+  epoch  11 it   40/200 loss 0.9603
+  epoch  11 it   60/200 loss 0.9612
+  epoch  11 it   80/200 loss 0.9589
+  epoch  11 it  100/200 loss 0.9553
+  epoch  11 it  120/200 loss 0.9533
+  epoch  11 it  140/200 loss 0.9528
+  epoch  11 it  160/200 loss 0.9524
+  epoch  11 it  180/200 loss 0.9517
+  epoch  11 it  200/200 loss 0.9508
+[epoch  11/30] mean_loss=0.9508 (45.9s)
+  epoch  12 it   20/200 loss 0.9605
+  epoch  12 it   40/200 loss 0.9538
+  epoch  12 it   60/200 loss 0.9509
+  epoch  12 it   80/200 loss 0.9443
+  epoch  12 it  100/200 loss 0.9389
+  epoch  12 it  120/200 loss 0.9363
+  epoch  12 it  140/200 loss 0.9338
+  epoch  12 it  160/200 loss 0.9344
+  epoch  12 it  180/200 loss 0.9363
+  epoch  12 it  200/200 loss 0.9363
+[epoch  12/30] mean_loss=0.9363 (44.4s)
+  epoch  13 it   20/200 loss 0.9294
+  epoch  13 it   40/200 loss 0.9204
+  epoch  13 it   60/200 loss 0.9153
+  epoch  13 it   80/200 loss 0.9155
+  epoch  13 it  100/200 loss 0.9177
+  epoch  13 it  120/200 loss 0.9190
+  epoch  13 it  140/200 loss 0.9165
+  epoch  13 it  160/200 loss 0.9166
+  epoch  13 it  180/200 loss 0.9171
+  epoch  13 it  200/200 loss 0.9173
+[epoch  13/30] mean_loss=0.9173 (44.0s)
+  epoch  14 it   20/200 loss 0.9146
+  epoch  14 it   40/200 loss 0.9066
+  epoch  14 it   60/200 loss 0.9131
+  epoch  14 it   80/200 loss 0.9125
+  epoch  14 it  100/200 loss 0.9118
+  epoch  14 it  120/200 loss 0.9122
+  epoch  14 it  140/200 loss 0.9110
+  epoch  14 it  160/200 loss 0.9103
+  epoch  14 it  180/200 loss 0.9097
+  epoch  14 it  200/200 loss 0.9094
+[epoch  14/30] mean_loss=0.9094 (44.2s)
+  epoch  15 it   20/200 loss 0.9048
+  epoch  15 it   40/200 loss 0.9048
+  epoch  15 it   60/200 loss 0.9072
+  epoch  15 it   80/200 loss 0.9028
+  epoch  15 it  100/200 loss 0.9035
+  epoch  15 it  120/200 loss 0.9029
+  epoch  15 it  140/200 loss 0.9033
+  epoch  15 it  160/200 loss 0.9034
+  epoch  15 it  180/200 loss 0.9026
+  epoch  15 it  200/200 loss 0.9037
+[epoch  15/30] mean_loss=0.9037 (43.9s)
+  [eval @ep15] acc=0.9577 auc=0.9821 dice=0.7856 cldice=0.8273 se=0.8879 sp=0.9646
+  [eval] new best dice=0.7856 -> saved ../checkpoints/ablation/A_sgl_baseline_best.pt
+  epoch  16 it   20/200 loss 0.9035
+  epoch  16 it   40/200 loss 0.8940
+  epoch  16 it   60/200 loss 0.8980
+  epoch  16 it   80/200 loss 0.8975
+  epoch  16 it  100/200 loss 0.8991
+  epoch  16 it  120/200 loss 0.8998
+  epoch  16 it  140/200 loss 0.8990
+  epoch  16 it  160/200 loss 0.8985
+  epoch  16 it  180/200 loss 0.8992
+  epoch  16 it  200/200 loss 0.8986
+[epoch  16/30] mean_loss=0.8986 (45.1s)
+  epoch  17 it   20/200 loss 0.8933
+  epoch  17 it   40/200 loss 0.8936
+  epoch  17 it   60/200 loss 0.8950
+  epoch  17 it   80/200 loss 0.8933
+  epoch  17 it  100/200 loss 0.8904
+  epoch  17 it  120/200 loss 0.8920
+  epoch  17 it  140/200 loss 0.8932
+  epoch  17 it  160/200 loss 0.8927
+  epoch  17 it  180/200 loss 0.8926
+  epoch  17 it  200/200 loss 0.8933
+[epoch  17/30] mean_loss=0.8933 (46.3s)
+  epoch  18 it   20/200 loss 0.8871
+  epoch  18 it   40/200 loss 0.8898
+  epoch  18 it   60/200 loss 0.8912
+  epoch  18 it   80/200 loss 0.8879
+  epoch  18 it  100/200 loss 0.8878
+  epoch  18 it  120/200 loss 0.8867
+  epoch  18 it  140/200 loss 0.8880
+  epoch  18 it  160/200 loss 0.8884
+  epoch  18 it  180/200 loss 0.8875
+  epoch  18 it  200/200 loss 0.8874
+[epoch  18/30] mean_loss=0.8874 (46.0s)
+  epoch  19 it   20/200 loss 0.8890
+  epoch  19 it   40/200 loss 0.8840
+  epoch  19 it   60/200 loss 0.8837
+  epoch  19 it   80/200 loss 0.8865
+  epoch  19 it  100/200 loss 0.8849
+  epoch  19 it  120/200 loss 0.8855
+  epoch  19 it  140/200 loss 0.8862
+  epoch  19 it  160/200 loss 0.8865
+  epoch  19 it  180/200 loss 0.8872
+  epoch  19 it  200/200 loss 0.8870
+[epoch  19/30] mean_loss=0.8870 (43.9s)
+  epoch  20 it   20/200 loss 0.8755
+  epoch  20 it   40/200 loss 0.8730
+  epoch  20 it   60/200 loss 0.8771
+  epoch  20 it   80/200 loss 0.8808
+  epoch  20 it  100/200 loss 0.8842
+  epoch  20 it  120/200 loss 0.8831
+  epoch  20 it  140/200 loss 0.8843
+  epoch  20 it  160/200 loss 0.8857
+  epoch  20 it  180/200 loss 0.8854
+  epoch  20 it  200/200 loss 0.8857
+[epoch  20/30] mean_loss=0.8857 (46.2s)
+  [eval @ep20] acc=0.9623 auc=0.9829 dice=0.8006 cldice=0.8268 se=0.8698 sp=0.9714
+  [eval] new best dice=0.8006 -> saved ../checkpoints/ablation/A_sgl_baseline_best.pt
+  epoch  21 it   20/200 loss 0.8903
+  epoch  21 it   40/200 loss 0.8845
+  epoch  21 it   60/200 loss 0.8832
+  epoch  21 it   80/200 loss 0.8811
+  epoch  21 it  100/200 loss 0.8809
+  epoch  21 it  120/200 loss 0.8792
+  epoch  21 it  140/200 loss 0.8785
+  epoch  21 it  160/200 loss 0.8784
+  epoch  21 it  180/200 loss 0.8793
+  epoch  21 it  200/200 loss 0.8788
+[epoch  21/30] mean_loss=0.8788 (45.4s)
+  epoch  22 it   20/200 loss 0.8855
+  epoch  22 it   40/200 loss 0.8852
+  epoch  22 it   60/200 loss 0.8810
+  epoch  22 it   80/200 loss 0.8802
+  epoch  22 it  100/200 loss 0.8825
+  epoch  22 it  120/200 loss 0.8823
+  epoch  22 it  140/200 loss 0.8825
+  epoch  22 it  160/200 loss 0.8826
+  epoch  22 it  180/200 loss 0.8826
+  epoch  22 it  200/200 loss 0.8822
+[epoch  22/30] mean_loss=0.8822 (45.3s)
+  epoch  23 it   20/200 loss 0.8787
+  epoch  23 it   40/200 loss 0.8817
+  epoch  23 it   60/200 loss 0.8811
+  epoch  23 it   80/200 loss 0.8826
+  epoch  23 it  100/200 loss 0.8799
+  epoch  23 it  120/200 loss 0.8826
+  epoch  23 it  140/200 loss 0.8826
+  epoch  23 it  160/200 loss 0.8829
+  epoch  23 it  180/200 loss 0.8834
+  epoch  23 it  200/200 loss 0.8834
+[epoch  23/30] mean_loss=0.8834 (47.2s)
+  epoch  24 it   20/200 loss 0.8767
+  epoch  24 it   40/200 loss 0.8789
+  epoch  24 it   60/200 loss 0.8809
+  epoch  24 it   80/200 loss 0.8796
+  epoch  24 it  100/200 loss 0.8775
+  epoch  24 it  120/200 loss 0.8811
+  epoch  24 it  140/200 loss 0.8836
+  epoch  24 it  160/200 loss 0.8822
+  epoch  24 it  180/200 loss 0.8829
+  epoch  24 it  200/200 loss 0.8835
+[epoch  24/30] mean_loss=0.8835 (46.8s)
+  epoch  25 it   20/200 loss 0.8788
+  epoch  25 it   40/200 loss 0.8827
+  epoch  25 it   60/200 loss 0.8824
+  epoch  25 it   80/200 loss 0.8803
+  epoch  25 it  100/200 loss 0.8806
+  epoch  25 it  120/200 loss 0.8776
+  epoch  25 it  140/200 loss 0.8760
+  epoch  25 it  160/200 loss 0.8773
+  epoch  25 it  180/200 loss 0.8769
+  epoch  25 it  200/200 loss 0.8787
+[epoch  25/30] mean_loss=0.8787 (46.2s)
+  [eval @ep25] acc=0.9626 auc=0.9843 dice=0.8036 cldice=0.8323 se=0.8769 sp=0.9710
+  [eval] new best dice=0.8036 -> saved ../checkpoints/ablation/A_sgl_baseline_best.pt
+  epoch  26 it   20/200 loss 0.8811
+  epoch  26 it   40/200 loss 0.8793
+  epoch  26 it   60/200 loss 0.8802
+  epoch  26 it   80/200 loss 0.8772
+  epoch  26 it  100/200 loss 0.8744
+  epoch  26 it  120/200 loss 0.8769
+  epoch  26 it  140/200 loss 0.8756
+  epoch  26 it  160/200 loss 0.8779
+  epoch  26 it  180/200 loss 0.8794
+  epoch  26 it  200/200 loss 0.8804
+[epoch  26/30] mean_loss=0.8804 (46.8s)
+  epoch  27 it   20/200 loss 0.8685
+  epoch  27 it   40/200 loss 0.8713
+  epoch  27 it   60/200 loss 0.8714
+  epoch  27 it   80/200 loss 0.8760
+  epoch  27 it  100/200 loss 0.8759
+  epoch  27 it  120/200 loss 0.8749
+  epoch  27 it  140/200 loss 0.8767
+  epoch  27 it  160/200 loss 0.8783
+  epoch  27 it  180/200 loss 0.8781
+  epoch  27 it  200/200 loss 0.8783
+[epoch  27/30] mean_loss=0.8783 (45.9s)
+  epoch  28 it   20/200 loss 0.8768
+  epoch  28 it   40/200 loss 0.8813
+  epoch  28 it   60/200 loss 0.8801
+  epoch  28 it   80/200 loss 0.8748
+  epoch  28 it  100/200 loss 0.8727
+  epoch  28 it  120/200 loss 0.8744
+  epoch  28 it  140/200 loss 0.8731
+  epoch  28 it  160/200 loss 0.8727
+  epoch  28 it  180/200 loss 0.8738
+  epoch  28 it  200/200 loss 0.8746
+[epoch  28/30] mean_loss=0.8746 (45.5s)
+  epoch  29 it   20/200 loss 0.8848
+  epoch  29 it   40/200 loss 0.8840
+  epoch  29 it   60/200 loss 0.8823
+  epoch  29 it   80/200 loss 0.8802
+  epoch  29 it  100/200 loss 0.8800
+  epoch  29 it  120/200 loss 0.8786
+  epoch  29 it  140/200 loss 0.8784
+  epoch  29 it  160/200 loss 0.8777
+  epoch  29 it  180/200 loss 0.8762
+  epoch  29 it  200/200 loss 0.8763
+[epoch  29/30] mean_loss=0.8763 (44.8s)
+  epoch  30 it   20/200 loss 0.8687
+  epoch  30 it   40/200 loss 0.8682
+  epoch  30 it   60/200 loss 0.8712
+  epoch  30 it   80/200 loss 0.8729
+  epoch  30 it  100/200 loss 0.8713
+  epoch  30 it  120/200 loss 0.8733
+  epoch  30 it  140/200 loss 0.8739
+  epoch  30 it  160/200 loss 0.8748
+  epoch  30 it  180/200 loss 0.8768
+  epoch  30 it  200/200 loss 0.8771
+[epoch  30/30] mean_loss=0.8771 (45.8s)
+  [eval @ep30] acc=0.9622 auc=0.9826 dice=0.8000 cldice=0.8258 se=0.8670 sp=0.9716
+[train] saved final-epoch checkpoint -> ../checkpoints/ablation/A_sgl_baseline_last.pt
+  [A_sgl_baseline/last] acc=0.9630 auc=0.9849 dice=0.8038 cldice=0.8319 se=0.8713 sp=0.9720 beta0=29.64
+  [A_sgl_baseline/best_dice] acc=0.9632 auc=0.9857 dice=0.8067 cldice=0.8369 se=0.8793 sp=0.9715 beta0=26.95
+[ablation] A_sgl_baseline done in 23.3 min -> ../outputs/ablation.json
+
+=== D_sgl_cldice: SGL + clDice (proposed)  [loss=sgl_cldice] ===
+[train] device=mps epochs=30 bs=4 patch=128 lr=0.0001 loss=sgl_cldice teacher=yes images=all
+  epoch   1 it   20/200 loss 1.4779
+  epoch   1 it   40/200 loss 1.4527
+  epoch   1 it   60/200 loss 1.4000
+  epoch   1 it   80/200 loss 1.3485
+  epoch   1 it  100/200 loss 1.2926
+  epoch   1 it  120/200 loss 1.2493
+  epoch   1 it  140/200 loss 1.2139
+  epoch   1 it  160/200 loss 1.1841
+  epoch   1 it  180/200 loss 1.1596
+  epoch   1 it  200/200 loss 1.1359
+[epoch   1/30] mean_loss=1.1359 (44.9s)
+  epoch   2 it   20/200 loss 0.9135
+  epoch   2 it   40/200 loss 0.9021
+  epoch   2 it   60/200 loss 0.9029
+  epoch   2 it   80/200 loss 0.8984
+  epoch   2 it  100/200 loss 0.8916
+  epoch   2 it  120/200 loss 0.8855
+  epoch   2 it  140/200 loss 0.8870
+  epoch   2 it  160/200 loss 0.8838
+  epoch   2 it  180/200 loss 0.8807
+  epoch   2 it  200/200 loss 0.8763
+[epoch   2/30] mean_loss=0.8763 (48.9s)
+  epoch   3 it   20/200 loss 0.8285
+  epoch   3 it   40/200 loss 0.8305
+  epoch   3 it   60/200 loss 0.8396
+  epoch   3 it   80/200 loss 0.8359
+  epoch   3 it  100/200 loss 0.8309
+  epoch   3 it  120/200 loss 0.8276
+  epoch   3 it  140/200 loss 0.8265
+  epoch   3 it  160/200 loss 0.8248
+  epoch   3 it  180/200 loss 0.8231
+  epoch   3 it  200/200 loss 0.8216
+[epoch   3/30] mean_loss=0.8216 (44.7s)
+  epoch   4 it   20/200 loss 0.8121
+  epoch   4 it   40/200 loss 0.8096
+  epoch   4 it   60/200 loss 0.8018
+  epoch   4 it   80/200 loss 0.7979
+  epoch   4 it  100/200 loss 0.7922
+  epoch   4 it  120/200 loss 0.7890
+  epoch   4 it  140/200 loss 0.7872
+  epoch   4 it  160/200 loss 0.7845
+  epoch   4 it  180/200 loss 0.7859
+  epoch   4 it  200/200 loss 0.7824
+[epoch   4/30] mean_loss=0.7824 (47.6s)
+  epoch   5 it   20/200 loss 0.7732
+  epoch   5 it   40/200 loss 0.7700
+  epoch   5 it   60/200 loss 0.7700
+  epoch   5 it   80/200 loss 0.7708
+  epoch   5 it  100/200 loss 0.7691
+  epoch   5 it  120/200 loss 0.7675
+  epoch   5 it  140/200 loss 0.7656
+  epoch   5 it  160/200 loss 0.7631
+  epoch   5 it  180/200 loss 0.7586
+  epoch   5 it  200/200 loss 0.7556
+[epoch   5/30] mean_loss=0.7556 (48.3s)
+  [eval @ep5] acc=0.8309 auc=0.9627 dice=0.4921 cldice=0.7719 se=0.9362 sp=0.8209
+  [eval] new best dice=0.4921 -> saved ../checkpoints/ablation/D_sgl_cldice_best.pt
+  epoch   6 it   20/200 loss 0.7491
+  epoch   6 it   40/200 loss 0.7495
+  epoch   6 it   60/200 loss 0.7442
+  epoch   6 it   80/200 loss 0.7410
+  epoch   6 it  100/200 loss 0.7407
+  epoch   6 it  120/200 loss 0.7417
+  epoch   6 it  140/200 loss 0.7425
+  epoch   6 it  160/200 loss 0.7417
+  epoch   6 it  180/200 loss 0.7412
+  epoch   6 it  200/200 loss 0.7391
+[epoch   6/30] mean_loss=0.7391 (48.0s)
+  epoch   7 it   20/200 loss 0.7297
+  epoch   7 it   40/200 loss 0.7246
+  epoch   7 it   60/200 loss 0.7185
+  epoch   7 it   80/200 loss 0.7175
+  epoch   7 it  100/200 loss 0.7197
+  epoch   7 it  120/200 loss 0.7188
+  epoch   7 it  140/200 loss 0.7165
+  epoch   7 it  160/200 loss 0.7191
+  epoch   7 it  180/200 loss 0.7201
+  epoch   7 it  200/200 loss 0.7175
+[epoch   7/30] mean_loss=0.7175 (47.1s)
+  epoch   8 it   20/200 loss 0.7228
+  epoch   8 it   40/200 loss 0.7170
+  epoch   8 it   60/200 loss 0.7125
+  epoch   8 it   80/200 loss 0.7135
+  epoch   8 it  100/200 loss 0.7122
+  epoch   8 it  120/200 loss 0.7098
+  epoch   8 it  140/200 loss 0.7083
+  epoch   8 it  160/200 loss 0.7088
+  epoch   8 it  180/200 loss 0.7094
+  epoch   8 it  200/200 loss 0.7071
+[epoch   8/30] mean_loss=0.7071 (46.0s)
+  epoch   9 it   20/200 loss 0.6800
+  epoch   9 it   40/200 loss 0.6882
+  epoch   9 it   60/200 loss 0.6855
+  epoch   9 it   80/200 loss 0.6787
+  epoch   9 it  100/200 loss 0.6790
+  epoch   9 it  120/200 loss 0.6806
+  epoch   9 it  140/200 loss 0.6810
+  epoch   9 it  160/200 loss 0.6810
+  epoch   9 it  180/200 loss 0.6806
+  epoch   9 it  200/200 loss 0.6791
+[epoch   9/30] mean_loss=0.6791 (46.5s)
+  epoch  10 it   20/200 loss 0.6846
+  epoch  10 it   40/200 loss 0.6720
+  epoch  10 it   60/200 loss 0.6722
+  epoch  10 it   80/200 loss 0.6761
+  epoch  10 it  100/200 loss 0.6743
+  epoch  10 it  120/200 loss 0.6725
+  epoch  10 it  140/200 loss 0.6756
+  epoch  10 it  160/200 loss 0.6737
+  epoch  10 it  180/200 loss 0.6725
+  epoch  10 it  200/200 loss 0.6731
+[epoch  10/30] mean_loss=0.6731 (46.1s)
+  [eval @ep10] acc=0.8979 auc=0.9720 dice=0.6147 cldice=0.8300 se=0.9242 sp=0.8954
+  [eval] new best dice=0.6147 -> saved ../checkpoints/ablation/D_sgl_cldice_best.pt
+  epoch  11 it   20/200 loss 0.6525
+  epoch  11 it   40/200 loss 0.6560
+  epoch  11 it   60/200 loss 0.6597
+  epoch  11 it   80/200 loss 0.6628
+  epoch  11 it  100/200 loss 0.6667
+  epoch  11 it  120/200 loss 0.6672
+  epoch  11 it  140/200 loss 0.6661
+  epoch  11 it  160/200 loss 0.6661
+  epoch  11 it  180/200 loss 0.6657
+  epoch  11 it  200/200 loss 0.6669
+[epoch  11/30] mean_loss=0.6669 (46.2s)
+  epoch  12 it   20/200 loss 0.6641
+  epoch  12 it   40/200 loss 0.6562
+  epoch  12 it   60/200 loss 0.6602
+  epoch  12 it   80/200 loss 0.6574
+  epoch  12 it  100/200 loss 0.6589
+  epoch  12 it  120/200 loss 0.6590
+  epoch  12 it  140/200 loss 0.6608
+  epoch  12 it  160/200 loss 0.6606
+  epoch  12 it  180/200 loss 0.6588
+  epoch  12 it  200/200 loss 0.6596
+[epoch  12/30] mean_loss=0.6596 (48.5s)
+  epoch  13 it   20/200 loss 0.6696
+  epoch  13 it   40/200 loss 0.6632
+  epoch  13 it   60/200 loss 0.6605
+  epoch  13 it   80/200 loss 0.6578
+  epoch  13 it  100/200 loss 0.6529
+  epoch  13 it  120/200 loss 0.6539
+  epoch  13 it  140/200 loss 0.6538
+  epoch  13 it  160/200 loss 0.6526
+  epoch  13 it  180/200 loss 0.6534
+  epoch  13 it  200/200 loss 0.6523
+[epoch  13/30] mean_loss=0.6523 (50.0s)
+  epoch  14 it   20/200 loss 0.6440
+  epoch  14 it   40/200 loss 0.6341
+  epoch  14 it   60/200 loss 0.6431
+  epoch  14 it   80/200 loss 0.6435
+  epoch  14 it  100/200 loss 0.6431
+  epoch  14 it  120/200 loss 0.6424
+  epoch  14 it  140/200 loss 0.6433
+  epoch  14 it  160/200 loss 0.6450
+  epoch  14 it  180/200 loss 0.6446
+  epoch  14 it  200/200 loss 0.6451
+[epoch  14/30] mean_loss=0.6451 (48.0s)
+  epoch  15 it   20/200 loss 0.6575
+  epoch  15 it   40/200 loss 0.6480
+  epoch  15 it   60/200 loss 0.6423
+  epoch  15 it   80/200 loss 0.6396
+  epoch  15 it  100/200 loss 0.6411
+  epoch  15 it  120/200 loss 0.6421
+  epoch  15 it  140/200 loss 0.6426
+  epoch  15 it  160/200 loss 0.6415
+  epoch  15 it  180/200 loss 0.6409
+  epoch  15 it  200/200 loss 0.6418
+[epoch  15/30] mean_loss=0.6418 (47.4s)
+  [eval @ep15] acc=0.9415 auc=0.9676 dice=0.7202 cldice=0.8396 se=0.8626 sp=0.9493
+  [eval] new best dice=0.7202 -> saved ../checkpoints/ablation/D_sgl_cldice_best.pt
+  epoch  16 it   20/200 loss 0.6340
+  epoch  16 it   40/200 loss 0.6395
+  epoch  16 it   60/200 loss 0.6480
+  epoch  16 it   80/200 loss 0.6460
+  epoch  16 it  100/200 loss 0.6451
+  epoch  16 it  120/200 loss 0.6430
+  epoch  16 it  140/200 loss 0.6439
+  epoch  16 it  160/200 loss 0.6429
+  epoch  16 it  180/200 loss 0.6435
+  epoch  16 it  200/200 loss 0.6434
+[epoch  16/30] mean_loss=0.6434 (46.1s)
+  epoch  17 it   20/200 loss 0.6223
+  epoch  17 it   40/200 loss 0.6390
+  epoch  17 it   60/200 loss 0.6439
+  epoch  17 it   80/200 loss 0.6414
+  epoch  17 it  100/200 loss 0.6388
+  epoch  17 it  120/200 loss 0.6377
+  epoch  17 it  140/200 loss 0.6395
+  epoch  17 it  160/200 loss 0.6384
+  epoch  17 it  180/200 loss 0.6390
+  epoch  17 it  200/200 loss 0.6377
+[epoch  17/30] mean_loss=0.6377 (46.1s)
+  epoch  18 it   20/200 loss 0.6405
+  epoch  18 it   40/200 loss 0.6470
+  epoch  18 it   60/200 loss 0.6362
+  epoch  18 it   80/200 loss 0.6352
+  epoch  18 it  100/200 loss 0.6337
+  epoch  18 it  120/200 loss 0.6359
+  epoch  18 it  140/200 loss 0.6355
+  epoch  18 it  160/200 loss 0.6351
+  epoch  18 it  180/200 loss 0.6360
+  epoch  18 it  200/200 loss 0.6361
+[epoch  18/30] mean_loss=0.6361 (47.7s)
+  epoch  19 it   20/200 loss 0.6480
+  epoch  19 it   40/200 loss 0.6333
+  epoch  19 it   60/200 loss 0.6318
+  epoch  19 it   80/200 loss 0.6355
+  epoch  19 it  100/200 loss 0.6380
+  epoch  19 it  120/200 loss 0.6372
+  epoch  19 it  140/200 loss 0.6354
+  epoch  19 it  160/200 loss 0.6348
+  epoch  19 it  180/200 loss 0.6347
+  epoch  19 it  200/200 loss 0.6339
+[epoch  19/30] mean_loss=0.6339 (46.5s)
+  epoch  20 it   20/200 loss 0.6279
+  epoch  20 it   40/200 loss 0.6242
+  epoch  20 it   60/200 loss 0.6292
+  epoch  20 it   80/200 loss 0.6284
+  epoch  20 it  100/200 loss 0.6314
+  epoch  20 it  120/200 loss 0.6320
+  epoch  20 it  140/200 loss 0.6317
+  epoch  20 it  160/200 loss 0.6297
+  epoch  20 it  180/200 loss 0.6292
+  epoch  20 it  200/200 loss 0.6296
+[epoch  20/30] mean_loss=0.6296 (46.9s)
+  [eval @ep20] acc=0.9409 auc=0.9695 dice=0.7191 cldice=0.8430 se=0.8670 sp=0.9481
+  epoch  21 it   20/200 loss 0.6338
+  epoch  21 it   40/200 loss 0.6306
+  epoch  21 it   60/200 loss 0.6261
+  epoch  21 it   80/200 loss 0.6252
+  epoch  21 it  100/200 loss 0.6275
+  epoch  21 it  120/200 loss 0.6284
+  epoch  21 it  140/200 loss 0.6284
+  epoch  21 it  160/200 loss 0.6267
+  epoch  21 it  180/200 loss 0.6260
+  epoch  21 it  200/200 loss 0.6248
+[epoch  21/30] mean_loss=0.6248 (47.9s)
+  epoch  22 it   20/200 loss 0.6185
+  epoch  22 it   40/200 loss 0.6270
+  epoch  22 it   60/200 loss 0.6270
+  epoch  22 it   80/200 loss 0.6258
+  epoch  22 it  100/200 loss 0.6236
+  epoch  22 it  120/200 loss 0.6227
+  epoch  22 it  140/200 loss 0.6231
+  epoch  22 it  160/200 loss 0.6244
+  epoch  22 it  180/200 loss 0.6255
+  epoch  22 it  200/200 loss 0.6254
+[epoch  22/30] mean_loss=0.6254 (47.0s)
+  epoch  23 it   20/200 loss 0.6110
+  epoch  23 it   40/200 loss 0.6146
+  epoch  23 it   60/200 loss 0.6144
+  epoch  23 it   80/200 loss 0.6105
+  epoch  23 it  100/200 loss 0.6162
+  epoch  23 it  120/200 loss 0.6183
+  epoch  23 it  140/200 loss 0.6198
+  epoch  23 it  160/200 loss 0.6206
+  epoch  23 it  180/200 loss 0.6244
+  epoch  23 it  200/200 loss 0.6253
+[epoch  23/30] mean_loss=0.6253 (46.3s)
+  epoch  24 it   20/200 loss 0.6257
+  epoch  24 it   40/200 loss 0.6240
+  epoch  24 it   60/200 loss 0.6251
+  epoch  24 it   80/200 loss 0.6234
+  epoch  24 it  100/200 loss 0.6256
+  epoch  24 it  120/200 loss 0.6242
+  epoch  24 it  140/200 loss 0.6237
+  epoch  24 it  160/200 loss 0.6248
+  epoch  24 it  180/200 loss 0.6234
+  epoch  24 it  200/200 loss 0.6228
+[epoch  24/30] mean_loss=0.6228 (45.3s)
+  epoch  25 it   20/200 loss 0.6194
+  epoch  25 it   40/200 loss 0.6241
+  epoch  25 it   60/200 loss 0.6226
+  epoch  25 it   80/200 loss 0.6200
+  epoch  25 it  100/200 loss 0.6203
+  epoch  25 it  120/200 loss 0.6204
+  epoch  25 it  140/200 loss 0.6204
+  epoch  25 it  160/200 loss 0.6217
+  epoch  25 it  180/200 loss 0.6216
+  epoch  25 it  200/200 loss 0.6220
+[epoch  25/30] mean_loss=0.6220 (44.6s)
+  [eval @ep25] acc=0.9424 auc=0.9753 dice=0.7271 cldice=0.8425 se=0.8790 sp=0.9487
+  [eval] new best dice=0.7271 -> saved ../checkpoints/ablation/D_sgl_cldice_best.pt
+  epoch  26 it   20/200 loss 0.6266
+  epoch  26 it   40/200 loss 0.6298
+  epoch  26 it   60/200 loss 0.6250
+  epoch  26 it   80/200 loss 0.6242
+  epoch  26 it  100/200 loss 0.6218
+  epoch  26 it  120/200 loss 0.6210
+  epoch  26 it  140/200 loss 0.6190
+  epoch  26 it  160/200 loss 0.6193
+  epoch  26 it  180/200 loss 0.6198
+  epoch  26 it  200/200 loss 0.6194
+[epoch  26/30] mean_loss=0.6194 (45.8s)
+  epoch  27 it   20/200 loss 0.6121
+  epoch  27 it   40/200 loss 0.6214
+  epoch  27 it   60/200 loss 0.6202
+  epoch  27 it   80/200 loss 0.6231
+  epoch  27 it  100/200 loss 0.6232
+  epoch  27 it  120/200 loss 0.6226
+  epoch  27 it  140/200 loss 0.6223
+  epoch  27 it  160/200 loss 0.6255
+  epoch  27 it  180/200 loss 0.6243
+  epoch  27 it  200/200 loss 0.6225
+[epoch  27/30] mean_loss=0.6225 (45.7s)
+  epoch  28 it   20/200 loss 0.6261
+  epoch  28 it   40/200 loss 0.6250
+  epoch  28 it   60/200 loss 0.6278
+  epoch  28 it   80/200 loss 0.6232
+  epoch  28 it  100/200 loss 0.6183
+  epoch  28 it  120/200 loss 0.6175
+  epoch  28 it  140/200 loss 0.6196
+  epoch  28 it  160/200 loss 0.6178
+  epoch  28 it  180/200 loss 0.6166
+  epoch  28 it  200/200 loss 0.6170
+[epoch  28/30] mean_loss=0.6170 (46.0s)
+  epoch  29 it   20/200 loss 0.6042
+  epoch  29 it   40/200 loss 0.6076
+  epoch  29 it   60/200 loss 0.6146
+  epoch  29 it   80/200 loss 0.6128
+  epoch  29 it  100/200 loss 0.6129
+  epoch  29 it  120/200 loss 0.6114
+  epoch  29 it  140/200 loss 0.6114
+  epoch  29 it  160/200 loss 0.6133
+  epoch  29 it  180/200 loss 0.6144
+  epoch  29 it  200/200 loss 0.6154
+[epoch  29/30] mean_loss=0.6154 (45.1s)
+  epoch  30 it   20/200 loss 0.6136
+  epoch  30 it   40/200 loss 0.6071
+  epoch  30 it   60/200 loss 0.6101
+  epoch  30 it   80/200 loss 0.6119
+  epoch  30 it  100/200 loss 0.6133
+  epoch  30 it  120/200 loss 0.6141
+  epoch  30 it  140/200 loss 0.6146
+  epoch  30 it  160/200 loss 0.6162
+  epoch  30 it  180/200 loss 0.6180
+  epoch  30 it  200/200 loss 0.6187
+[epoch  30/30] mean_loss=0.6187 (44.9s)
+  [eval @ep30] acc=0.9408 auc=0.9737 dice=0.7218 cldice=0.8454 se=0.8795 sp=0.9469
+[train] saved final-epoch checkpoint -> ../checkpoints/ablation/D_sgl_cldice_last.pt
+  [D_sgl_cldice/last] acc=0.9422 auc=0.9764 dice=0.7274 cldice=0.8565 se=0.8833 sp=0.9480 beta0=9.55
+  [D_sgl_cldice/best_dice] acc=0.9444 auc=0.9772 dice=0.7347 cldice=0.8493 se=0.8819 sp=0.9506 beta0=7.78
+[ablation] D_sgl_cldice done in 23.9 min -> ../outputs/ablation.json
+
+=== Ablation complete ===

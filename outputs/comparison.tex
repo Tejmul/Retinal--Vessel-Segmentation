@@ -1,0 +1,20 @@
+\begin{table}[!t]
+  \caption{Ablation on DRIVE: study-group pseudo-labels against the
+  clDice loss. Network, split, schedule, optimiser, augmentation and
+  seed are identical in all rows; only the objective changes.}
+  \label{tab:ablation}
+  \centering
+  \renewcommand{\arraystretch}{1.15}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{} l l c c r r r r r @{}}
+    \toprule
+    & \textbf{Configuration} & \textbf{SGL} & \textbf{clDice} & \textbf{Acc} & \textbf{AUC} & \textbf{Se} & \textbf{$F_1$} & \textbf{clDice} \\
+    \midrule
+    R & published weights & yes & no & 0.9705 & 0.9886 & 0.8380 & 0.8316 & -- \\
+    B & human labels, BCE & no & no & 0.9695 & 0.9872 & 0.8012 & 0.8200 & 0.8118 \\
+    C & clDice only & no & yes & 0.9599 & 0.9818 & 0.8677 & 0.7904 & 0.8595 \\
+    A & SGL baseline (paper loss) & yes & no & 0.9630 & 0.9849 & 0.8713 & 0.8038 & 0.8319 \\
+    D & SGL + clDice (proposed) & yes & yes & 0.9422 & 0.9764 & 0.8833 & 0.7274 & 0.8565 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

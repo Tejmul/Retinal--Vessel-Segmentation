@@ -94,8 +94,8 @@ pip install -r requirements.txt
 
 # Full pipeline: K-fold SGL labeling -> final training -> evaluation
 cd src
-python run_sgl.py --root ../data/DRIVE --k 5 \
-    --fold-epochs 15 --final-epochs 45 \
+python run_sgl.py --root ../data/DRIVE --k 4 \
+    --fold-epochs 10 --final-epochs 30 \
     --batch-size 4 --patch-size 128 --repeat 40
 
 # Reuse already-generated pseudo-labels (skip the expensive labeling stage)
@@ -122,6 +122,10 @@ src/
   sgl_labeling.py  K-fold study-group pseudo-label generation
   evaluate.py      test-set evaluation
   run_sgl.py       end-to-end pipeline
+  run_ablation.py  2x2 ablation: SGL pseudo-labels x clDice loss
+  make_comparison.py  comparison tables + hypothesis verdict
+  failure_analysis.py failure analysis (calibre-split Se, broken branches)
+  export_web_assets.py  image export for the results viewer
 data/DRIVE/        training/ (ids 21-40) and test/ (ids 01-20)
 checkpoints/       saved models (best-accuracy)
 outputs/           logs, metrics JSON, prediction PNGs
@@ -153,3 +157,99 @@ little higher because of the FOV-masking protocol noted below. Larger patches
 > circular field-of-view are masked to zero in both prediction and label and are
 > included in the accuracy denominator (as true negatives). This is the same
 > protocol used by the released repo.
+
+
+---
+
+## 7. Ablation: does a topology loss help?
+
+The literature review proposed mixing the centre-line Dice loss
+(Shit *et al.*, CVPR 2021) into SGL's objective, predicting that punishing
+breaks in thin branches more heavily than slightly thick edges would raise
+sensitivity and F1. [src/losses.py](src/losses.py) implements it as a
+differentiable soft skeleton; the experiment is a 2x2 factorial over
+*SGL pseudo-labels* x *clDice*, with the network, split, schedule, optimiser,
+augmentation and seed (123) identical in every row.
+
+Scored on the **final-epoch** weights — no checkpoint is selected on the test
+set — with 8-way self-ensemble at threshold 100/255.
+
+| # | configuration | SGL | clDice | Acc | AUC | Se | Sp | F1 | clDice | IoU-v | beta0 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| R | published `drive_k8` weights, our code | K=8 | — | 0.9705 | 0.9886 | 0.8380 | 0.9834 | 0.8316 | — | 0.7120 | — |
+| B | human labels, BCE | — | — | 0.9695 | 0.9872 | 0.8012 | **0.9860** | **0.8200** | 0.8118 | **0.6956** | 32.6 |
+| C | clDice only | — | yes | 0.9599 | 0.9818 | 0.8677 | 0.9690 | 0.7904 | **0.8595** | 0.6537 | **8.2** |
+| A | SGL baseline (paper loss) | yes | — | 0.9630 | 0.9849 | 0.8713 | 0.9720 | 0.8038 | 0.8319 | 0.6723 | 29.6 |
+| D | SGL + clDice (proposed) | yes | yes | 0.9422 | 0.9764 | **0.8833** | 0.9480 | 0.7274 | 0.8565 | 0.5719 | 9.6 |
+
+Row R is the reproduction check: the paper's released weights load into this
+re-implementation with all 324 tensors matching (the official checkpoint's two
+extra `last_act` parameters are dead — the call is commented out upstream) and
+score AUC 0.9886 / F1 0.8316 against the paper's reported ~0.983 / ~0.82. The
+retrained rows sit lower because they get 30 epochs at 128px rather than the
+paper's longer schedule at 256px.
+
+### The hypothesis was wrong, and informatively so
+
+| prediction | observed (D − A) | holds? |
+|---|---|---|
+| Se rises by 2–5 pp | +1.20 pp | no |
+| F1 rises by 0.5–1.5 pp | **−7.64 pp** | no |
+| Sp falls by at most 1 pp | −2.40 pp | no |
+
+The F1 drop clears the review's own 1 pp noise floor by a wide margin and has
+the same sign on 20 of 20 images (Wilcoxon p < 0.001), so it is not sampling
+noise. But clDice delivered exactly the topology it promised:
+
+| | Se thin | Se thick | broken branches | components | FP rate |
+|---|---|---|---|---|---|
+| B no-SGL | 0.6986 | 0.9802 | 181 | 65 | 0.0213 |
+| C clDice only | 0.8002 | 0.9832 | **97** | **17** | 0.0471 |
+| A SGL baseline | 0.8031 | 0.9892 | 141 | 57 | 0.0426 |
+| D SGL + clDice | **0.8220** | 0.9884 | **97** | 20 | 0.0791 |
+
+Row D has the best thin-vessel recall of the four, 31% fewer broken branches
+than the baseline and a third of its fragmentation, improving clDice on 20/20
+images. The bill arrives as false positives: a loss that only rewards covering
+the label's centre-line has no reason to keep the prediction thin, so the model
+thickens everything until the skeleton is covered. That is what costs the F1.
+
+Two further findings worth more than the headline:
+
+* **SGL did not help under this budget.** A against B is −1.6 pp F1 and
+  −0.7 pp accuracy, buying +7.0 pp sensitivity and +2.0 pp clDice. The
+  pseudo-labels shift the operating point rather than dominating — which is
+  exactly why the review asked for the no-SGL control row.
+* **alpha = 0.5 is too strong.** clDice got equal weight with cross-entropy
+  because the hypothesis specified "an equal mix". The connectivity gain
+  saturates while the precision loss does not, so the experiment this run does
+  *not* cover, and should not be read as covering, is a sweep of alpha from
+  0.1 to 0.3.
+
+Single seed throughout; differences below 1 pp should not be trusted without
+repeats.
+
+### Reproducing it
+
+```bash
+cd src
+python run_ablation.py --k 4 --fold-epochs 10 --final-epochs 30 \
+    --patch-size 128 --batch-size 4 --repeat 40 --seed 123
+python make_comparison.py        # outputs/comparison.{md,tex}
+python failure_analysis.py       # outputs/failure_analysis.json + panels
+```
+
+Study-group labelling is resumable: a fold whose pseudo-labels already exist on
+disk is skipped, and `outputs/ablation.json` is rewritten after each row and
+read back on startup, so an interrupted run does not repeat finished work.
+Total ~2 h on an M2 (labelling ~25 min, then ~23 min per row).
+
+## 8. Results viewer
+
+[web/index.html](web/index.html) is a self-contained page that compares the
+baseline and the proposed model on the DRIVE test images. The magnifier shows
+where they disagree pixel by pixel — green where clDice recovered a true vessel
+the baseline missed, red where it invented one — because the differences this
+experiment is about are invisible at full-image scale. Open it over HTTP
+(`python -m http.server` from `web/`), not as a `file://` URL, since it fetches
+its data.
