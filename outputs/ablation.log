@@ -1,0 +1,349 @@
+=== Ablation on mps | seed=123 epochs=30 patch=128 ===
+[sgl] 20 images, 4 folds: 21..25 | 26..30 | 31..35 | 36..40
+
+[sgl] fold 1/4  holdout=['21', '22', '23', '24', '25']  train on 15 images
+[train] device=mps epochs=10 bs=4 patch=128 lr=0.0001 loss=sgl teacher=no images=['26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40']
+  epoch   1 it   20/150 loss 1.6721
+  epoch   1 it   40/150 loss 1.6482
+  epoch   1 it   60/150 loss 1.6266
+  epoch   1 it   80/150 loss 1.6094
+  epoch   1 it  100/150 loss 1.5965
+  epoch   1 it  120/150 loss 1.5852
+  epoch   1 it  140/150 loss 1.5748
+[epoch   1/10] mean_loss=1.5686 (36.8s)
+  epoch   2 it   20/150 loss 1.5003
+  epoch   2 it   40/150 loss 1.4977
+  epoch   2 it   60/150 loss 1.4923
+  epoch   2 it   80/150 loss 1.4859
+  epoch   2 it  100/150 loss 1.4767
+  epoch   2 it  120/150 loss 1.4723
+  epoch   2 it  140/150 loss 1.4697
+[epoch   2/10] mean_loss=1.4685 (34.7s)
+  epoch   3 it   20/150 loss 1.3980
+  epoch   3 it   40/150 loss 1.4177
+  epoch   3 it   60/150 loss 1.4140
+  epoch   3 it   80/150 loss 1.4093
+  epoch   3 it  100/150 loss 1.4034
+  epoch   3 it  120/150 loss 1.4017
+  epoch   3 it  140/150 loss 1.3984
+[epoch   3/10] mean_loss=1.3973 (34.7s)
+  epoch   4 it   20/150 loss 1.3393
+  epoch   4 it   40/150 loss 1.3376
+  epoch   4 it   60/150 loss 1.3405
+  epoch   4 it   80/150 loss 1.3340
+  epoch   4 it  100/150 loss 1.3300
+  epoch   4 it  120/150 loss 1.3253
+  epoch   4 it  140/150 loss 1.3224
+[epoch   4/10] mean_loss=1.3199 (35.2s)
+  epoch   5 it   20/150 loss 1.2782
+  epoch   5 it   40/150 loss 1.2758
+  epoch   5 it   60/150 loss 1.2678
+  epoch   5 it   80/150 loss 1.2631
+  epoch   5 it  100/150 loss 1.2611
+  epoch   5 it  120/150 loss 1.2570
+  epoch   5 it  140/150 loss 1.2553
+[epoch   5/10] mean_loss=1.2534 (34.4s)
+  epoch   6 it   20/150 loss 1.2351
+  epoch   6 it   40/150 loss 1.2360
+  epoch   6 it   60/150 loss 1.2360
+  epoch   6 it   80/150 loss 1.2285
+  epoch   6 it  100/150 loss 1.2235
+  epoch   6 it  120/150 loss 1.2153
+  epoch   6 it  140/150 loss 1.2088
+[epoch   6/10] mean_loss=1.2033 (33.5s)
+  epoch   7 it   20/150 loss 1.1785
+  epoch   7 it   40/150 loss 1.1644
+  epoch   7 it   60/150 loss 1.1455
+  epoch   7 it   80/150 loss 1.1467
+  epoch   7 it  100/150 loss 1.1470
+  epoch   7 it  120/150 loss 1.1439
+  epoch   7 it  140/150 loss 1.1422
+[epoch   7/10] mean_loss=1.1361 (34.1s)
+  epoch   8 it   20/150 loss 1.0807
+  epoch   8 it   40/150 loss 1.0829
+  epoch   8 it   60/150 loss 1.0648
+  epoch   8 it   80/150 loss 1.0614
+  epoch   8 it  100/150 loss 1.0622
+  epoch   8 it  120/150 loss 1.0602
+  epoch   8 it  140/150 loss 1.0576
+[epoch   8/10] mean_loss=1.0536 (34.0s)
+  epoch   9 it   20/150 loss 1.0164
+  epoch   9 it   40/150 loss 1.0163
+  epoch   9 it   60/150 loss 1.0195
+  epoch   9 it   80/150 loss 1.0103
+  epoch   9 it  100/150 loss 1.0077
+  epoch   9 it  120/150 loss 1.0050
+  epoch   9 it  140/150 loss 1.0017
+[epoch   9/10] mean_loss=1.0022 (33.8s)
+  epoch  10 it   20/150 loss 0.9617
+  epoch  10 it   40/150 loss 0.9543
+  epoch  10 it   60/150 loss 0.9464
+  epoch  10 it   80/150 loss 0.9458
+  epoch  10 it  100/150 loss 0.9461
+  epoch  10 it  120/150 loss 0.9394
+  epoch  10 it  140/150 loss 0.9375
+[epoch  10/10] mean_loss=0.9343 (32.9s)
+[train] saved checkpoint -> ../checkpoints/ablation/folds/fold1.pt
+  [sgl] pseudo-label saved: 21
+  [sgl] pseudo-label saved: 22
+  [sgl] pseudo-label saved: 23
+  [sgl] pseudo-label saved: 24
+  [sgl] pseudo-label saved: 25
+
+[sgl] fold 2/4  holdout=['26', '27', '28', '29', '30']  train on 15 images
+[train] device=mps epochs=10 bs=4 patch=128 lr=0.0001 loss=sgl teacher=no images=['21', '22', '23', '24', '25', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40']
+  epoch   1 it   20/150 loss 1.2112
+  epoch   1 it   40/150 loss 1.1878
+  epoch   1 it   60/150 loss 1.1656
+  epoch   1 it   80/150 loss 1.1510
+  epoch   1 it  100/150 loss 1.1394
+  epoch   1 it  120/150 loss 1.1295
+  epoch   1 it  140/150 loss 1.1216
+[epoch   1/10] mean_loss=1.1177 (32.9s)
+  epoch   2 it   20/150 loss 1.0555
+  epoch   2 it   40/150 loss 1.0495
+  epoch   2 it   60/150 loss 1.0455
+  epoch   2 it   80/150 loss 1.0420
+  epoch   2 it  100/150 loss 1.0378
+  epoch   2 it  120/150 loss 1.0331
+  epoch   2 it  140/150 loss 1.0290
+[epoch   2/10] mean_loss=1.0276 (34.3s)
+  epoch   3 it   20/150 loss 0.9923
+  epoch   3 it   40/150 loss 0.9877
+  epoch   3 it   60/150 loss 0.9842
+  epoch   3 it   80/150 loss 0.9805
+  epoch   3 it  100/150 loss 0.9780
+  epoch   3 it  120/150 loss 0.9744
+  epoch   3 it  140/150 loss 0.9704
+[epoch   3/10] mean_loss=0.9684 (33.7s)
+  epoch   4 it   20/150 loss 0.9300
+  epoch   4 it   40/150 loss 0.9290
+  epoch   4 it   60/150 loss 0.9277
+  epoch   4 it   80/150 loss 0.9244
+  epoch   4 it  100/150 loss 0.9225
+  epoch   4 it  120/150 loss 0.9189
+  epoch   4 it  140/150 loss 0.9157
+[epoch   4/10] mean_loss=0.9137 (33.3s)
+  epoch   5 it   20/150 loss 0.8888
+  epoch   5 it   40/150 loss 0.8864
+  epoch   5 it   60/150 loss 0.8796
+  epoch   5 it   80/150 loss 0.8754
+  epoch   5 it  100/150 loss 0.8735
+  epoch   5 it  120/150 loss 0.8708
+  epoch   5 it  140/150 loss 0.8677
+[epoch   5/10] mean_loss=0.8668 (33.0s)
+  epoch   6 it   20/150 loss 0.8421
+  epoch   6 it   40/150 loss 0.8369
+  epoch   6 it   60/150 loss 0.8320
+  epoch   6 it   80/150 loss 0.8330
+  epoch   6 it  100/150 loss 0.8289
+  epoch   6 it  120/150 loss 0.8274
+  epoch   6 it  140/150 loss 0.8226
+[epoch   6/10] mean_loss=0.8202 (32.9s)
+  epoch   7 it   20/150 loss 0.7926
+  epoch   7 it   40/150 loss 0.7983
+  epoch   7 it   60/150 loss 0.7920
+  epoch   7 it   80/150 loss 0.7879
+  epoch   7 it  100/150 loss 0.7863
+  epoch   7 it  120/150 loss 0.7825
+  epoch   7 it  140/150 loss 0.7811
+[epoch   7/10] mean_loss=0.7804 (32.8s)
+  epoch   8 it   20/150 loss 0.7658
+  epoch   8 it   40/150 loss 0.7572
+  epoch   8 it   60/150 loss 0.7544
+  epoch   8 it   80/150 loss 0.7522
+  epoch   8 it  100/150 loss 0.7508
+  epoch   8 it  120/150 loss 0.7467
+  epoch   8 it  140/150 loss 0.7435
+[epoch   8/10] mean_loss=0.7432 (33.0s)
+  epoch   9 it   20/150 loss 0.7302
+  epoch   9 it   40/150 loss 0.7256
+  epoch   9 it   60/150 loss 0.7177
+  epoch   9 it   80/150 loss 0.7126
+  epoch   9 it  100/150 loss 0.7089
+  epoch   9 it  120/150 loss 0.7028
+  epoch   9 it  140/150 loss 0.7002
+[epoch   9/10] mean_loss=0.6993 (32.8s)
+  epoch  10 it   20/150 loss 0.6865
+  epoch  10 it   40/150 loss 0.6790
+  epoch  10 it   60/150 loss 0.6768
+  epoch  10 it   80/150 loss 0.6727
+  epoch  10 it  100/150 loss 0.6690
+  epoch  10 it  120/150 loss 0.6647
+  epoch  10 it  140/150 loss 0.6640
+[epoch  10/10] mean_loss=0.6640 (34.4s)
+[train] saved checkpoint -> ../checkpoints/ablation/folds/fold2.pt
+  [sgl] pseudo-label saved: 26
+  [sgl] pseudo-label saved: 27
+  [sgl] pseudo-label saved: 28
+  [sgl] pseudo-label saved: 29
+  [sgl] pseudo-label saved: 30
+
+[sgl] fold 3/4  holdout=['31', '32', '33', '34', '35']  train on 15 images
+[train] device=mps epochs=10 bs=4 patch=128 lr=0.0001 loss=sgl teacher=no images=['21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '36', '37', '38', '39', '40']
+  epoch   1 it   20/150 loss 1.6575
+  epoch   1 it   40/150 loss 1.6404
+  epoch   1 it   60/150 loss 1.6160
+  epoch   1 it   80/150 loss 1.5882
+  epoch   1 it  100/150 loss 1.5643
+  epoch   1 it  120/150 loss 1.5442
+  epoch   1 it  140/150 loss 1.5300
+[epoch   1/10] mean_loss=1.5225 (34.3s)
+  epoch   2 it   20/150 loss 1.4206
+  epoch   2 it   40/150 loss 1.4088
+  epoch   2 it   60/150 loss 1.4022
+  epoch   2 it   80/150 loss 1.4040
+  epoch   2 it  100/150 loss 1.3989
+  epoch   2 it  120/150 loss 1.3950
+  epoch   2 it  140/150 loss 1.3897
+[epoch   2/10] mean_loss=1.3870 (32.5s)
+  epoch   3 it   20/150 loss 1.3433
+  epoch   3 it   40/150 loss 1.3256
+  epoch   3 it   60/150 loss 1.3222
+  epoch   3 it   80/150 loss 1.3147
+  epoch   3 it  100/150 loss 1.3054
+  epoch   3 it  120/150 loss 1.3050
+  epoch   3 it  140/150 loss 1.3003
+[epoch   3/10] mean_loss=1.2981 (32.6s)
+  epoch   4 it   20/150 loss 1.2740
+  epoch   4 it   40/150 loss 1.2647
+  epoch   4 it   60/150 loss 1.2706
+  epoch   4 it   80/150 loss 1.2631
+  epoch   4 it  100/150 loss 1.2567
+  epoch   4 it  120/150 loss 1.2520
+  epoch   4 it  140/150 loss 1.2528
+[epoch   4/10] mean_loss=1.2504 (32.4s)
+  epoch   5 it   20/150 loss 1.1845
+  epoch   5 it   40/150 loss 1.1951
+  epoch   5 it   60/150 loss 1.1969
+  epoch   5 it   80/150 loss 1.1883
+  epoch   5 it  100/150 loss 1.1802
+  epoch   5 it  120/150 loss 1.1781
+  epoch   5 it  140/150 loss 1.1767
+[epoch   5/10] mean_loss=1.1737 (32.5s)
+  epoch   6 it   20/150 loss 1.1600
+  epoch   6 it   40/150 loss 1.1529
+  epoch   6 it   60/150 loss 1.1407
+  epoch   6 it   80/150 loss 1.1335
+  epoch   6 it  100/150 loss 1.1286
+  epoch   6 it  120/150 loss 1.1222
+  epoch   6 it  140/150 loss 1.1174
+[epoch   6/10] mean_loss=1.1136 (33.4s)
+  epoch   7 it   20/150 loss 1.0747
+  epoch   7 it   40/150 loss 1.0704
+  epoch   7 it   60/150 loss 1.0730
+  epoch   7 it   80/150 loss 1.0586
+  epoch   7 it  100/150 loss 1.0542
+  epoch   7 it  120/150 loss 1.0529
+  epoch   7 it  140/150 loss 1.0437
+[epoch   7/10] mean_loss=1.0431 (32.8s)
+  epoch   8 it   20/150 loss 1.0023
+  epoch   8 it   40/150 loss 0.9999
+  epoch   8 it   60/150 loss 0.9999
+  epoch   8 it   80/150 loss 1.0051
+  epoch   8 it  100/150 loss 1.0025
+  epoch   8 it  120/150 loss 0.9986
+  epoch   8 it  140/150 loss 0.9949
+[epoch   8/10] mean_loss=0.9901 (32.3s)
+  epoch   9 it   20/150 loss 0.9652
+  epoch   9 it   40/150 loss 0.9573
+  epoch   9 it   60/150 loss 0.9439
+  epoch   9 it   80/150 loss 0.9358
+  epoch   9 it  100/150 loss 0.9338
+  epoch   9 it  120/150 loss 0.9354
+  epoch   9 it  140/150 loss 0.9332
+[epoch   9/10] mean_loss=0.9318 (32.5s)
+  epoch  10 it   20/150 loss 0.9181
+  epoch  10 it   40/150 loss 0.9105
+  epoch  10 it   60/150 loss 0.9019
+  epoch  10 it   80/150 loss 0.8966
+  epoch  10 it  100/150 loss 0.8855
+  epoch  10 it  120/150 loss 0.8826
+  epoch  10 it  140/150 loss 0.8733
+[epoch  10/10] mean_loss=0.8706 (34.0s)
+[train] saved checkpoint -> ../checkpoints/ablation/folds/fold3.pt
+  [sgl] pseudo-label saved: 31
+  [sgl] pseudo-label saved: 32
+  [sgl] pseudo-label saved: 33
+  [sgl] pseudo-label saved: 34
+  [sgl] pseudo-label saved: 35
+
+[sgl] fold 4/4  holdout=['36', '37', '38', '39', '40']  train on 15 images
+[train] device=mps epochs=10 bs=4 patch=128 lr=0.0001 loss=sgl teacher=no images=['21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35']
+  epoch   1 it   20/150 loss 1.5699
+  epoch   1 it   40/150 loss 1.5645
+  epoch   1 it   60/150 loss 1.5561
+  epoch   1 it   80/150 loss 1.5507
+  epoch   1 it  100/150 loss 1.5426
+  epoch   1 it  120/150 loss 1.5364
+  epoch   1 it  140/150 loss 1.5309
+[epoch   1/10] mean_loss=1.5277 (34.0s)
+  epoch   2 it   20/150 loss 1.4633
+  epoch   2 it   40/150 loss 1.4616
+  epoch   2 it   60/150 loss 1.4563
+  epoch   2 it   80/150 loss 1.4558
+  epoch   2 it  100/150 loss 1.4534
+  epoch   2 it  120/150 loss 1.4483
+  epoch   2 it  140/150 loss 1.4453
+[epoch   2/10] mean_loss=1.4425 (32.4s)
+  epoch   3 it   20/150 loss 1.3887
+  epoch   3 it   40/150 loss 1.3924
+  epoch   3 it   60/150 loss 1.3877
+  epoch   3 it   80/150 loss 1.3851
+  epoch   3 it  100/150 loss 1.3785
+  epoch   3 it  120/150 loss 1.3737
+  epoch   3 it  140/150 loss 1.3702
+[epoch   3/10] mean_loss=1.3690 (32.7s)
+  epoch   4 it   20/150 loss 1.3282
+  epoch   4 it   40/150 loss 1.3173
+  epoch   4 it   60/150 loss 1.3225
+  epoch   4 it   80/150 loss 1.3158
+  epoch   4 it  100/150 loss 1.3084
+  epoch   4 it  120/150 loss 1.3073
+  epoch   4 it  140/150 loss 1.3010
+[epoch   4/10] mean_loss=1.2992 (32.7s)
+  epoch   5 it   20/150 loss 1.2666
+  epoch   5 it   40/150 loss 1.2587
+  epoch   5 it   60/150 loss 1.2477
+  epoch   5 it   80/150 loss 1.2467
+  epoch   5 it  100/150 loss 1.2471
+  epoch   5 it  120/150 loss 1.2445
+  epoch   5 it  140/150 loss 1.2423
+[epoch   5/10] mean_loss=1.2413 (33.1s)
+  epoch   6 it   20/150 loss 1.2041
+  epoch   6 it   40/150 loss 1.1989
+  epoch   6 it   60/150 loss 1.1941
+  epoch   6 it   80/150 loss 1.1870
+  epoch   6 it  100/150 loss 1.1849
+  epoch   6 it  120/150 loss 1.1826
+  epoch   6 it  140/150 loss 1.1793
+[epoch   6/10] mean_loss=1.1753 (34.8s)
+  epoch   7 it   20/150 loss 1.1265
+  epoch   7 it   40/150 loss 1.1300
+  epoch   7 it   60/150 loss 1.1276
+  epoch   7 it   80/150 loss 1.1207
+  epoch   7 it  100/150 loss 1.1155
+  epoch   7 it  120/150 loss 1.1072
+  epoch   7 it  140/150 loss 1.1026
+[epoch   7/10] mean_loss=1.1000 (34.9s)
+  epoch   8 it   20/150 loss 1.0749
+  epoch   8 it   40/150 loss 1.0688
+  epoch   8 it   60/150 loss 1.0575
+  epoch   8 it   80/150 loss 1.0585
+  epoch   8 it  100/150 loss 1.0548
+  epoch   8 it  120/150 loss 1.0522
+  epoch   8 it  140/150 loss 1.0464
+[epoch   8/10] mean_loss=1.0424 (34.6s)
+  epoch   9 it   20/150 loss 1.0149
+  epoch   9 it   40/150 loss 1.0148
+  epoch   9 it   60/150 loss 1.0043
+  epoch   9 it   80/150 loss 1.0028
+  epoch   9 it  100/150 loss 1.0021
+  epoch   9 it  120/150 loss 0.9990
+  epoch   9 it  140/150 loss 0.9910
+[epoch   9/10] mean_loss=0.9885 (33.3s)
+  epoch  10 it   20/150 loss 0.9445
+  epoch  10 it   40/150 loss 0.9407
+  epoch  10 it   60/150 loss 0.9417
+  epoch  10 it   80/150 loss 0.9372
+  epoch  10 it  100/150 loss 0.9345
