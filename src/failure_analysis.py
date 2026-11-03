@@ -17,12 +17,17 @@ import os
 
 import numpy as np
 from PIL import Image
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import (binary_dilation, convolve, distance_transform_edt,
+                           gaussian_filter)
 from skimage.measure import label as cc_label
 from skimage.morphology import skeletonize
 
 ORIG_H, ORIG_W = 584, 565
 THIN_RADIUS = 1.5
+#: the optic disc on DRIVE is roughly 100 px across at this resolution
+DISC_RADIUS = 55
+#: how far from a branch point still counts as "at the crossing"
+JUNCTION_DILATE = 4
 
 
 def _load_gt(root, idx):
@@ -32,6 +37,12 @@ def _load_gt(root, idx):
         os.path.join(root, "test", "mask", f"{idx}_mask.gif"))).astype(np.float32)
     gt = ((ve > 200) & (ma > 125))[:ORIG_H, :ORIG_W]
     return gt, (ma > 125)[:ORIG_H, :ORIG_W]
+
+
+def _load_fundus(root, idx):
+    im = np.array(Image.open(
+        os.path.join(root, "test", "images", f"{idx}_training.tif")))
+    return im[:ORIG_H, :ORIG_W]
 
 
 def _load_pred(pred_dir, idx):
@@ -69,6 +80,51 @@ def stratified(gt, pred, fov):
     }
 
 
+def disc_region(fundus, fov):
+    """Approximate the optic disc as the brightest smoothed spot inside the FOV.
+
+    DRIVE ships no disc annotation. The disc is by far the brightest structure
+    in the retina, so a heavy Gaussian blur of the red channel peaks on it; the
+    region is then a fixed-radius circle about that peak. It is an estimate, and
+    it is only used to split errors by region, never to score anything.
+    """
+    red = fundus[..., 0].astype(np.float32)
+    smooth = gaussian_filter(np.where(fov, red, 0.0), 12.0)
+    smooth[~fov] = -1.0
+    cy, cx = np.unravel_index(int(np.argmax(smooth)), smooth.shape)
+    yy, xx = np.ogrid[:ORIG_H, :ORIG_W]
+    return ((yy - cy) ** 2 + (xx - cx) ** 2) <= DISC_RADIUS ** 2
+
+
+def regional(gt, pred, fov, disc):
+    """Sensitivity and false-positive rate inside the optic disc vs outside it."""
+    f = lambda m: float((pred & m).sum() / max(m.sum(), 1))
+    return {
+        "se_disc": f(gt & disc), "se_nondisc": f(gt & ~disc),
+        "fpr_disc": f(fov & ~gt & disc), "fpr_nondisc": f(fov & ~gt & ~disc),
+        "n_disc_vessel": int((gt & disc).sum()),
+    }
+
+
+def junctions(gt, pred):
+    """Centre-line recall at crossings and bifurcations vs along plain runs.
+
+    A branch point is a skeleton pixel with three or more skeleton neighbours.
+    Everything within a few pixels of one counts as "at the crossing", because
+    that is where two vessels touch and a model has to choose.
+    """
+    skel = skeletonize(gt)
+    nb = convolve(skel.astype(np.uint8), np.ones((3, 3), np.uint8),
+                  mode="constant") - skel.astype(np.uint8)
+    branch = skel & (nb >= 3)
+    zone = binary_dilation(branch, iterations=JUNCTION_DILATE)
+    f = lambda m: float((pred & m).sum() / max(m.sum(), 1))
+    return {
+        "se_junction": f(skel & zone), "se_plain": f(skel & ~zone),
+        "n_junction": int((skel & zone).sum()), "n_branch_pts": int(branch.sum()),
+    }
+
+
 def analyse(root, pred_dir, ids):
     out = []
     for idx in ids:
@@ -81,6 +137,8 @@ def analyse(root, pred_dir, ids):
                "cc_pred": int(cc_label(pred, connectivity=2).max()),
                "cc_gt": int(cc_label(gt, connectivity=2).max())}
         rec.update(stratified(gt, pred, fov))
+        rec.update(regional(gt, pred, fov, disc_region(_load_fundus(root, idx), fov)))
+        rec.update(junctions(gt, pred))
         out.append(rec)
     return out
 
@@ -88,7 +146,9 @@ def analyse(root, pred_dir, ids):
 def summarise(recs):
     if not recs:
         return {}
-    keys = ["breaks", "missed_skel_px", "cc_pred", "se_thin", "se_thick", "fpr"]
+    keys = ["breaks", "missed_skel_px", "cc_pred", "se_thin", "se_thick", "fpr",
+            "se_disc", "se_nondisc", "fpr_disc", "fpr_nondisc",
+            "se_junction", "se_plain"]
     return {k: float(np.mean([r[k] for r in recs])) for k in keys}
 
 
@@ -158,6 +218,9 @@ def main():
             print(f"{name:>16}  breaks {m['breaks']:7.1f}  "
                   f"Se_thin {m['se_thin']:.4f}  Se_thick {m['se_thick']:.4f}  "
                   f"FPR {m['fpr']:.4f}  CC_pred {m['cc_pred']:.0f}")
+            print(f"{'':>16}  disc: Se {m['se_disc']:.4f} vs {m['se_nondisc']:.4f}   "
+                  f"FPR {m['fpr_disc']:.4f} vs {m['fpr_nondisc']:.4f}   "
+                  f"crossings: Se {m['se_junction']:.4f} vs {m['se_plain']:.4f}")
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     json.dump(report, open(args.out, "w"), indent=2)

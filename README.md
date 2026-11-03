@@ -214,6 +214,31 @@ images. The bill arrives as false positives: a loss that only rewards covering
 the label's centre-line has no reason to keep the prediction thin, so the model
 thickens everything until the skeleton is covered. That is what costs the F1.
 
+#### Where the errors gather
+
+The review promised to look at three places: faint thin vessels (above), the
+bright optic disc, and crossings where two vessels meet. The disc has no
+annotation in DRIVE, so it is estimated as the brightest smoothed spot inside
+the FOV; a crossing is any centre-line pixel within 4 px of a skeleton branch
+point.
+
+| | Se disc | Se non-disc | FPR disc | FPR non-disc | Se crossing | Se plain run |
+|---|---|---|---|---|---|---|
+| B no-SGL | 0.8634 | 0.7949 | 0.0431 | 0.0205 | 0.8087 | 0.7182 |
+| C clDice only | 0.8997 | 0.8647 | 0.0680 | 0.0464 | 0.8751 | 0.8267 |
+| A SGL baseline | 0.9105 | 0.8672 | 0.0771 | 0.0413 | 0.8595 | 0.7787 |
+| D SGL + clDice | **0.9159** | 0.8800 | **0.1200** | 0.0776 | 0.8807 | 0.8242 |
+
+Two things fall out. The optic disc is a false-positive hotspot for every row —
+roughly twice the background rate — and clDice makes it worse faster than it
+makes the rest of the image worse (D's disc FPR is +4.3 pp over A against
++3.6 pp outside it), which is what you would expect from a loss that is happy
+to thicken bright structures. And crossings are *not* where the baseline
+struggles: recall at junctions is 8 pp **above** plain runs, because junctions
+sit on the thick central tree. clDice's gain is concentrated on the plain runs
+(+4.6 pp A to D) rather than at the crossings (+2.1 pp) — it helps a vessel
+keep going, not resolve where two vessels touch.
+
 #### How much of the F1 drop is calibration?
 
 Every row above is scored at a fixed threshold of 100/255, which was chosen for

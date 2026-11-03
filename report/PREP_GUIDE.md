@@ -209,6 +209,17 @@ Because clDice is scored on the skeleton. Thickening a vessel keeps the skeleton
 connected at almost no cost to the clDice term, and cross-entropy is the only thing
 pushing back. At α = 0.5 cross-entropy loses that argument.
 
+**"Where do the errors actually gather?"**
+Three places, and we measured all three. **Thin vessels:** recall 0.822 vs 0.988
+on thick ones — that is where everything is lost. **The optic disc:** a
+false-positive hotspot for every model, about twice the background rate, and
+clDice makes it worse faster than it worsens the rest of the image, because a
+loss that rewards covering centre-lines is happy to thicken bright structures.
+**Crossings:** not actually a problem — recall at junctions is about 8 points
+*above* plain runs, because junctions sit on the thick central tree. clDice's
+gain is concentrated on plain runs (+4.6 pp) rather than at crossings (+2.1 pp):
+it helps a vessel keep going, not resolve where two vessels touch.
+
 **"What would you do differently?"**
 Three things: sweep α from 0.1 to 0.3 across several seeds; fit the threshold on a
 validation split instead of a constant; and always report a topology metric beside F₁,
