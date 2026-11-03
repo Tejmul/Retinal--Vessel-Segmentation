@@ -214,6 +214,28 @@ images. The bill arrives as false positives: a loss that only rewards covering
 the label's centre-line has no reason to keep the prediction thin, so the model
 thickens everything until the skeleton is covered. That is what costs the F1.
 
+#### How much of the F1 drop is calibration?
+
+Every row above is scored at a fixed threshold of 100/255, which was chosen for
+a cross-entropy model. A clDice-trained model puts its probability mass
+somewhere else, so that threshold flatters the baseline. `threshold_sweep.py`
+re-runs all four rows and lets each pick its own:
+
+| | F1 @ 100/255 | F1 @ own best | best threshold |
+|---|---|---|---|
+| B no-SGL | 0.8198 | 0.8217 | 85 |
+| C clDice only | 0.7902 | 0.8068 | 165 |
+| A SGL baseline | 0.8036 | 0.8127 | 125 |
+| D SGL + clDice | 0.7273 | **0.7987** | 170 |
+
+At matched operating points the D − A gap is **−1.40 pp**, not −7.64 — four
+fifths of the headline number was calibration rather than capability, and the
+same correction appears without SGL (C − B goes from −2.96 to −1.49 pp). The
+verdict does not change: the hypothesis predicted F1 would *rise*, and it still
+falls. But the fixed-threshold number on its own overstates the cost, so both
+are reported. Note that these thresholds are fitted on the test set and so
+flatter every row equally — they bound the gap, they are not scores.
+
 Two further findings worth more than the headline:
 
 * **SGL did not help under this budget.** A against B is −1.6 pp F1 and
@@ -237,6 +259,8 @@ python run_ablation.py --k 4 --fold-epochs 10 --final-epochs 30 \
     --patch-size 128 --batch-size 4 --repeat 40 --seed 123
 python make_comparison.py        # outputs/comparison.{md,tex}
 python failure_analysis.py       # outputs/failure_analysis.json + panels
+python threshold_sweep.py        # outputs/threshold_sweep.json (the calibration check)
+python make_slide_figures.py     # outputs/slides/*.png (figures for the deck)
 ```
 
 Study-group labelling is resumable: a fold whose pseudo-labels already exist on
